@@ -6,6 +6,7 @@
 class Chambre
 {
     int Id_chambre;
+    int a;
     QString categorie, type, statut_chambre;
     float tarif;
 
