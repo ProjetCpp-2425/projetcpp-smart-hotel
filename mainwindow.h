@@ -4,7 +4,7 @@
 #include "chambre.h"
 #include <QTableView>
 #include <QMainWindow>
-
+#include <QtCharts/QChart>
 namespace Ui {
 class MainWindow;
 }
@@ -25,7 +25,7 @@ private slots:
     void on_buttonRechercher_clicked();
     void on_buttonTrier_4_clicked();
     void on_pushButton_pdf_clicked();
-
+    void on_pushButton_statistique_clicked();
 
 
 
@@ -34,6 +34,7 @@ private:
     QTableView *tableView;
     QSqlQueryModel *model;
     Chambre chambre;
+
 };
 
 #endif // MAINWINDOW_H

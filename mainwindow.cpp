@@ -8,11 +8,20 @@
 #include <QPdfWriter>
 #include <QPainter>
 #include <QFileDialog>
-
+#include <QtCharts/QChart>
+#include <QtCharts/QChartView>
+#include <QtCharts/QBarSet>
+#include <QtCharts/QBarSeries>
+#include <QtCharts/QValueAxis>
+#include <QtCharts/QBarCategoryAxis>
+#include <QtCharts/QLineSeries>
+#include <algorithm>
+#include <QSqlDatabase>
+#include <QDebug>
 
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow), model(new QSqlQueryModel(this))
+    : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
@@ -27,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+
 }
 
 void MainWindow::on_pushButton_ajouter_clicked()
@@ -352,4 +362,89 @@ void MainWindow::on_pushButton_pdf_clicked()
     painter.end();
 
     QMessageBox::information(this, "PDF Created", "The PDF has been successfully created.");
+}
+
+
+
+
+
+
+void MainWindow::on_pushButton_statistique_clicked()
+{
+    // Définir les fourchettes de prix
+    int range_0_100 = 0;
+    int range_101_200 = 0;
+    int range_201_500 = 0;
+    int range_500_plus = 0;
+
+    // Requête SQL pour récupérer les tarifs des chambres
+
+    QSqlQuery query("SELECT tarif FROM chambre");
+
+    if (!query.exec()) {
+        QMessageBox::critical(this, "Erreur SQL", "Impossible de récupérer les données : " + query.lastError().text());
+        return;
+    }
+
+    // Parcourir les résultats et compter les chambres dans chaque fourchette de prix
+    while (query.next()) {
+        int tarif = query.value(0).toInt();
+        if (tarif <= 100) {
+            range_0_100++;
+        } else if (tarif <= 200) {
+            range_101_200++;
+        } else if (tarif <= 500) {
+            range_201_500++;
+        } else {
+            range_500_plus++;
+        }
+    }
+
+    // Créer un ensemble de barres pour chaque fourchette de prix
+    QBarSet *setRanges = new QBarSet("Nombre de Chambres");
+    *setRanges << range_0_100 << range_101_200 << range_201_500 << range_500_plus;
+
+    // Ajouter l'ensemble de barres à une série de barres
+    QBarSeries *series = new QBarSeries();
+    series->append(setRanges);
+
+    // Créer un graphique et ajouter la série de barres
+    QChart *chart = new QChart();
+    chart->addSeries(series);
+    chart->setTitle("Classement des chambres par fourchette de prix");
+    chart->setAnimationOptions(QChart::SeriesAnimations);
+
+    // Définir les catégories pour l'axe X
+    QStringList categories;
+    categories << "0 - 100" << "101 - 200" << "201 - 500" << "500+";
+
+    QBarCategoryAxis *axisX = new QBarCategoryAxis();
+    axisX->append(categories);
+    axisX->setLabelsAngle(-90);  // Ajuster l'angle pour plus de lisibilité
+    chart->addAxis(axisX, Qt::AlignBottom);
+    series->attachAxis(axisX);
+
+    // Définir l'axe Y pour le nombre de chambres
+    QValueAxis *axisY = new QValueAxis();
+    axisY->setTitleText("Nombre de Chambres");
+    int maxRange = std::max({range_0_100, range_101_200, range_201_500, range_500_plus});
+    axisY->setRange(0, maxRange + 5);  // Ajuster la plage si nécessaire
+    chart->addAxis(axisY, Qt::AlignLeft);
+    series->attachAxis(axisY);
+
+    // Créer une vue pour le graphique et l'afficher dans une nouvelle fenêtre
+    QChartView *chartView = new QChartView(chart);
+    chartView->setRenderHint(QPainter::Antialiasing);
+
+    QMainWindow *chartWindow = new QMainWindow(this);
+    chartWindow->setCentralWidget(chartView);
+    chartWindow->resize(800, 600);
+    chartWindow->show();
+
+    // Pour débogage, afficher les valeurs dans la console
+    qDebug() << "Chambres dans chaque fourchette de prix :";
+    qDebug() << "0 - 100 unités :" << range_0_100;
+    qDebug() << "101 - 200 unités :" << range_101_200;
+    qDebug() << "201 - 500 unités :" << range_201_500;
+    qDebug() << "500+ unités :" << range_500_plus;
 }
