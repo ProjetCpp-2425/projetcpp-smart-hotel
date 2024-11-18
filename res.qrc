@@ -1,0 +1,35 @@
+<RCC>
+    <qresource prefix="/">
+        <file>photo/25%.png</file>
+        <file>photo/alerte.png</file>
+        <file>photo/Capture d'écran 2024-09-29 231547.png</file>
+        <file>photo/dashboard_white.png</file>
+        <file>photo/Grey Minimalist Construction &amp; Architecture Presentation.png</file>
+        <file>photo/icons8-chercher-32.png</file>
+        <file>photo/icons8-client-50.png</file>
+        <file>photo/icons8-employé-50 (1).png</file>
+        <file>photo/icons8-employé-50.png</file>
+        <file>photo/icons8-finance-48 (1).png</file>
+        <file>photo/icons8-finance-48.png</file>
+        <file>photo/icons8-hôtel-5-étoiles-50.png</file>
+        <file>photo/icons8-lit-50 (1).png</file>
+        <file>photo/icons8-lit-50.png</file>
+        <file>photo/icons8-reservation-64 (1).png</file>
+        <file>photo/icons8-reservation-64.png</file>
+        <file>photo/icons8-service-50 (1).png</file>
+        <file>photo/icons8-service-50.png</file>
+        <file>photo/icons8-sortie-50 (1).png</file>
+        <file>photo/icons8-sortie-50.png</file>
+        <file>photo/icons8-utilisateur-50.png</file>
+        <file>photo/OIG3.jpg</file>
+        <file>photo/png-clipart-statistics-chart-computer-science-research-business-metas-blue-angle.png</file>
+        <file>photo/png-transparent-computer-icons-pdf-others-text-rectangle-logo.png</file>
+        <file>photo/pngegg (2).png</file>
+        <file>photo/pngegg (3).png</file>
+        <file>photo/pngegg (4).png</file>
+        <file>photo/pngegg (5).png</file>
+        <file>photo/pngtree-pc-graph-growth-statistics-icon-design-for-web-png-image_1928493.jpg</file>
+        <file>photo/pngwing.com (1).png</file>
+        <file>photo/pngwing.com (4).png</file>
+    </qresource>
+</RCC>
