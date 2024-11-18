@@ -26,6 +26,10 @@ private slots:
     void on_buttonTrier_4_clicked();
     void on_pushButton_pdf_clicked();
     void on_pushButton_statistique_clicked();
+    void on_pushButton_QR_clicked();
+
+    void on_pushButton_list_clicked();
+    void addNoteManually(QString roomId, QString note);
 
 
 

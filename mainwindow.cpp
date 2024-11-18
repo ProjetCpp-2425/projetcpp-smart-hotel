@@ -19,7 +19,8 @@
 #include <QSqlDatabase>
 #include <QDebug>
 
-
+#include <QProcess>
+#include "notesdialog.h"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -28,6 +29,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pushButton_afficher, &QPushButton::clicked, this, &MainWindow::refreshTableView);
     connect(ui->buttonRechercher, &QPushButton::clicked, this, &MainWindow::on_buttonRechercher_clicked);
     connect(ui->pushButton_pdf, &QPushButton::clicked, this, &MainWindow::on_pushButton_pdf_clicked);
+    connect(ui->pushButton_QR, &QPushButton::clicked, this, &MainWindow::on_pushButton_QR_clicked);
+
 
 
 
@@ -301,7 +304,6 @@ void MainWindow::on_buttonTrier_4_clicked()
 
 void MainWindow::on_pushButton_pdf_clicked()
 {
-    // Query the database to count the number of rooms for each type
     QSqlQuery query;
     query.prepare("SELECT type, COUNT(*) as count FROM chambre GROUP BY type");
 
@@ -310,7 +312,6 @@ void MainWindow::on_pushButton_pdf_clicked()
         return;
     }
 
-    // Process the data and calculate percentages
     QMap<QString, int> typeCounts;
     int totalRooms = 0;
 
@@ -326,29 +327,24 @@ void MainWindow::on_pushButton_pdf_clicked()
         return;
     }
 
-    // Calculate percentages
     QMap<QString, double> typePercentages;
     for (auto it = typeCounts.begin(); it != typeCounts.end(); ++it) {
         typePercentages[it.key()] = (it.value() / (double)totalRooms) * 100.0;
     }
 
-    // File save dialog
     QString fileName = QFileDialog::getSaveFileName(this, "Save PDF", "", "*.pdf");
     if (fileName.isEmpty()) return; // User canceled the dialog
     if (!fileName.endsWith(".pdf")) fileName += ".pdf";
 
-    // Create the PDF
     QPdfWriter pdfWriter(fileName);
     pdfWriter.setPageSize(QPageSize::A4);
     pdfWriter.setPageMargins(QMargins(20, 20, 20, 20));
 
     QPainter painter(&pdfWriter);
 
-    // Title
     painter.setFont(QFont("Arial", 16, QFont::Bold));
     painter.drawText(200, 100, "Statistiques par Type");
 
-    // Draw statistics
     painter.setFont(QFont("Arial", 12));
     int y = 500; // Increased distance from the title
     int lineSpacing = 500; // Increased spacing between lines
@@ -369,8 +365,12 @@ void MainWindow::on_pushButton_pdf_clicked()
 
 
 
+
+
 void MainWindow::on_pushButton_statistique_clicked()
 {
+
+
     // Définir les fourchettes de prix
     int range_0_100 = 0;
     int range_101_200 = 0;
@@ -378,10 +378,8 @@ void MainWindow::on_pushButton_statistique_clicked()
     int range_500_plus = 0;
 
     // Requête SQL pour récupérer les tarifs des chambres
-
-    QSqlQuery query("SELECT tarif FROM chambre");
-
-    if (!query.exec()) {
+    QSqlQuery query;
+    if (!query.exec("SELECT tarif FROM chambre")) {
         QMessageBox::critical(this, "Erreur SQL", "Impossible de récupérer les données : " + query.lastError().text());
         return;
     }
@@ -420,7 +418,8 @@ void MainWindow::on_pushButton_statistique_clicked()
 
     QBarCategoryAxis *axisX = new QBarCategoryAxis();
     axisX->append(categories);
-    axisX->setLabelsAngle(-90);  // Ajuster l'angle pour plus de lisibilité
+    axisX->setTitleText("Fourchette de Prix (unités)");
+    axisX->setLabelsAngle(-45);  // Ajuster l'angle pour plus de lisibilité
     chart->addAxis(axisX, Qt::AlignBottom);
     series->attachAxis(axisX);
 
@@ -428,7 +427,7 @@ void MainWindow::on_pushButton_statistique_clicked()
     QValueAxis *axisY = new QValueAxis();
     axisY->setTitleText("Nombre de Chambres");
     int maxRange = std::max({range_0_100, range_101_200, range_201_500, range_500_plus});
-    axisY->setRange(0, maxRange + 5);  // Ajuster la plage si nécessaire
+    axisY->setRange(0, maxRange + 5);  // Ajouter une marge pour l'affichage
     chart->addAxis(axisY, Qt::AlignLeft);
     series->attachAxis(axisY);
 
@@ -439,6 +438,7 @@ void MainWindow::on_pushButton_statistique_clicked()
     QMainWindow *chartWindow = new QMainWindow(this);
     chartWindow->setCentralWidget(chartView);
     chartWindow->resize(800, 600);
+    chartWindow->setWindowTitle("Statistiques des Chambres par Fourchette de Prix");
     chartWindow->show();
 
     // Pour débogage, afficher les valeurs dans la console
@@ -447,4 +447,111 @@ void MainWindow::on_pushButton_statistique_clicked()
     qDebug() << "101 - 200 unités :" << range_101_200;
     qDebug() << "201 - 500 unités :" << range_201_500;
     qDebug() << "500+ unités :" << range_500_plus;
+}
+
+
+void MainWindow::on_pushButton_QR_clicked()
+{
+
+    // Répertoire pour enregistrer les QR codes
+    QString outputDir = QString("%1/QR_Codes").arg(QDir::currentPath());
+    if (!QDir(outputDir).exists()) {
+        QDir().mkdir(outputDir);
+        qDebug() << "Répertoire créé pour les QR codes : " << outputDir;
+    }
+
+    // Vérifier si qrencode.exe existe
+    QString qrencodePath = "C:/Users/DF-JULLANAR/Documents/CRUD/tools/qrencode.exe";
+    if (!QFile::exists(qrencodePath)) {
+        QMessageBox::critical(this, "Erreur", QString("Le fichier qrencode.exe est introuvable au chemin : %1").arg(qrencodePath));
+        qDebug() << "Le fichier qrencode.exe est introuvable.";
+        return;
+    }
+
+    // Requête SQL pour récupérer les IDs des chambres
+    QSqlQuery query;
+    if (!query.exec("SELECT id_chambre FROM chambre")) {
+        // Output specific error to debug more effectively
+        QString errorMsg = QString("Erreur SQL : %1").arg(query.lastError().text());
+        QMessageBox::critical(this, "Erreur SQL", errorMsg);
+        qDebug() << errorMsg;  // Output to console for more detail
+        return;
+    }
+
+    // Parcourir les résultats et générer un QR code pour chaque ID
+    while (query.next()) {
+        QString idChambre = query.value(0).toString();
+        QString filePath = QString("%1/Room_%2.png").arg(outputDir).arg(idChambre);
+
+        // Commande pour générer un QR code avec qrencode.exe
+        QString command = QString("\"%1\" -o \"%2\" \"%3\"")
+                              .arg(qrencodePath)
+                              .arg(filePath)
+                              .arg(idChambre);
+
+        QProcess process;
+        process.start(command);
+        if (!process.waitForFinished()) {
+            QMessageBox::critical(this, "Erreur", QString("Échec de l'exécution de la commande : %1").arg(command));
+            qDebug() << "Commande échouée : " << command;
+            return;
+        }
+
+        // Vérifier si le fichier a été généré
+        if (!QFile::exists(filePath)) {
+            qDebug() << "Échec de génération pour ID chambre : " << idChambre << ", fichier attendu : " << filePath;
+        } else {
+            qDebug() << "QR code généré pour ID chambre : " << idChambre << ", fichier : " << filePath;
+        }
+    }
+
+    QMessageBox::information(this, "Succès", QString("Les QR codes ont été générés dans : %1").arg(outputDir));
+    qDebug() << "Génération des QR codes terminée avec succès.";
+}
+
+
+void MainWindow::addNoteManually(QString roomId, QString note)
+{
+    // Correctly creating an instance of the notesdialog class
+    notesdialog *notesDialog = new notesdialog(roomId, note, this);  // Use notesdialog here
+    notesDialog->show();
+}
+
+void MainWindow::on_pushButton_list_clicked()
+{
+    QString roomId = ui->lineEdit_id3->text();
+
+    if (roomId.isEmpty()) {
+        QMessageBox::warning(this, "Error", "Please enter a room ID.");
+        return;
+    }
+
+    // Convert roomId to an integer
+    bool ok;
+    int roomIdInt = roomId.toInt(&ok);
+
+    if (!ok) {
+        QMessageBox::warning(this, "Error", "Invalid room ID. Please enter a valid number.");
+        return;
+    }
+
+    // Check if the room ID exists in the 'chambre' table
+    QSqlQuery query;
+    query.prepare("SELECT COUNT(*) FROM chambre WHERE id_chambre = :room_id");
+    query.bindValue(":room_id", roomIdInt);  // Bind as an integer
+
+    if (!query.exec()) {
+        QMessageBox::critical(this, "SQL Error", query.lastError().text());
+        return;
+    }
+
+    query.next();
+    int count = query.value(0).toInt();
+
+    if (count == 0) {
+        QMessageBox::warning(this, "Error", "Room ID not found in the database. Please enter a valid ID.");
+        return;
+    }
+
+    addNoteManually(roomId, "");  // Pass roomId and initial note
 }
