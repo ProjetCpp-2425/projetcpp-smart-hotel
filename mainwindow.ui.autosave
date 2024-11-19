@@ -429,11 +429,7 @@ border-radius:5px;</string>
         </rect>
        </property>
        <property name="currentIndex">
-<<<<<<< HEAD
-        <number>1</number>
-=======
         <number>0</number>
->>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
        </property>
        <widget class="QWidget" name="tab_3">
         <attribute name="title">
@@ -1030,7 +1026,7 @@ border-radius:5px;</string>
         </rect>
        </property>
        <property name="currentIndex">
-        <number>3</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="tab">
         <attribute name="title">
@@ -1199,13 +1195,6 @@ border-radius:5px;</string>
             <height>26</height>
            </rect>
           </property>
-<<<<<<< HEAD
-          <property name="styleSheet">
-           <string notr="true"> border: 1.5px solid black; 
- border-radius: 5px; </string>
-          </property>
-=======
->>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
          </widget>
          <widget class="QLineEdit" name="lineEdit_3">
           <property name="geometry">
@@ -1216,13 +1205,6 @@ border-radius:5px;</string>
             <height>26</height>
            </rect>
           </property>
-<<<<<<< HEAD
-          <property name="styleSheet">
-           <string notr="true"> border: 2px solid black; 
- border-radius: 5px; </string>
-          </property>
-=======
->>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
          </widget>
          <widget class="QComboBox" name="comboBox">
           <property name="geometry">
@@ -1233,13 +1215,6 @@ border-radius:5px;</string>
             <height>26</height>
            </rect>
           </property>
-<<<<<<< HEAD
-          <property name="styleSheet">
-           <string notr="true"> border: 1px solid black; 
- border-radius: 5px; </string>
-          </property>
-=======
->>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
           <item>
            <property name="text">
             <string>revenu</string>
@@ -1260,13 +1235,6 @@ border-radius:5px;</string>
             <height>26</height>
            </rect>
           </property>
-<<<<<<< HEAD
-          <property name="styleSheet">
-           <string notr="true"> border: 1px solid black; 
- border-radius: 5px; </string>
-          </property>
-=======
->>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
           <item>
            <property name="text">
             <string>cheque</string>
@@ -1287,13 +1255,6 @@ border-radius:5px;</string>
             <height>26</height>
            </rect>
           </property>
-<<<<<<< HEAD
-          <property name="styleSheet">
-           <string notr="true"> border: 1px solid black; 
- border-radius: 5px; </string>
-          </property>
-=======
->>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
           <item>
            <property name="text">
             <string>paye</string>
@@ -1314,13 +1275,6 @@ border-radius:5px;</string>
             <height>26</height>
            </rect>
           </property>
-<<<<<<< HEAD
-          <property name="styleSheet">
-           <string notr="true"> border: 1px solid black; 
- border-radius: 5px; </string>
-          </property>
-=======
->>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
          </widget>
         </widget>
         <widget class="QFrame" name="frame_4">
@@ -1338,11 +1292,7 @@ border-radius:5px;</string>
          <widget class="QPushButton" name="pushButton_14">
           <property name="geometry">
            <rect>
-<<<<<<< HEAD
-            <x>40</x>
-=======
             <x>10</x>
->>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
             <y>10</y>
             <width>93</width>
             <height>29</height>
@@ -1359,11 +1309,7 @@ border-radius:4px;</string>
          <widget class="QPushButton" name="pushButton_15">
           <property name="geometry">
            <rect>
-<<<<<<< HEAD
-            <x>240</x>
-=======
             <x>120</x>
->>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
             <y>10</y>
             <width>93</width>
             <height>29</height>
@@ -1380,11 +1326,7 @@ border-radius:4px;</string>
          <widget class="QPushButton" name="pushButton_16">
           <property name="geometry">
            <rect>
-<<<<<<< HEAD
-            <x>460</x>
-=======
             <x>240</x>
->>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
             <y>10</y>
             <width>93</width>
             <height>29</height>
@@ -1398,8 +1340,6 @@ border-radius:4px;</string>
            <string>supprimer</string>
           </property>
          </widget>
-<<<<<<< HEAD
-=======
          <widget class="QPushButton" name="pushButton_13">
           <property name="geometry">
            <rect>
@@ -1417,7 +1357,6 @@ border-radius:4px;</string>
            <string>Statistique</string>
           </property>
          </widget>
->>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
         </widget>
         <widget class="QTableView" name="tableView">
          <property name="geometry">
@@ -1466,13 +1405,6 @@ border-radius:4px;</string>
            <height>26</height>
           </rect>
          </property>
-<<<<<<< HEAD
-         <property name="styleSheet">
-          <string notr="true"> border: 1px solid black; 
- border-radius: 5px; </string>
-         </property>
-=======
->>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
          <item>
           <property name="text">
            <string>id du transaction</string>
@@ -1499,12 +1431,7 @@ border-radius:4px;</string>
           </rect>
          </property>
          <property name="styleSheet">
-<<<<<<< HEAD
-          <string notr="true"> border: 1px solid black; 
- border-radius: 5px; </string>
-=======
           <string notr="true">border-color: rgb(0, 0, 0);</string>
->>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
          </property>
         </widget>
         <widget class="QPushButton" name="pushButton_44">
@@ -1553,13 +1480,6 @@ border-radius:4px;</string>
            <height>26</height>
           </rect>
          </property>
-<<<<<<< HEAD
-         <property name="styleSheet">
-          <string notr="true"> border: 1px solid black; 
- border-radius: 5px; </string>
-         </property>
-=======
->>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
          <item>
           <property name="text">
            <string>Date</string>
@@ -1590,19 +1510,6 @@ border-radius:4px;</string>
          </property>
         </widget>
        </widget>
-<<<<<<< HEAD
-       <widget class="QWidget" name="tab_8">
-        <attribute name="title">
-         <string>PDF/stat</string>
-        </attribute>
-        <widget class="QPushButton" name="pushButton_12">
-         <property name="geometry">
-          <rect>
-           <x>210</x>
-           <y>170</y>
-           <width>151</width>
-           <height>41</height>
-=======
        <widget class="QWidget" name="tab_2">
         <attribute name="title">
          <string>statistique</string>
@@ -1636,7 +1543,6 @@ border-radius:5px;</string>
            <y>440</y>
            <width>93</width>
            <height>29</height>
->>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
           </rect>
          </property>
          <property name="styleSheet">
@@ -1651,11 +1557,7 @@ border-radius:4px;</string>
          <property name="geometry">
           <rect>
            <x>10</x>
-<<<<<<< HEAD
-           <y>70</y>
-=======
            <y>10</y>
->>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
            <width>111</width>
            <height>21</height>
           </rect>
@@ -1675,11 +1577,7 @@ border-radius:4px;</string>
          <property name="geometry">
           <rect>
            <x>10</x>
-<<<<<<< HEAD
-           <y>110</y>
-=======
            <y>60</y>
->>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
            <width>81</width>
            <height>31</height>
           </rect>
@@ -1698,293 +1596,12 @@ border-radius:4px;</string>
         <widget class="QDateEdit" name="dateEdit_3">
          <property name="geometry">
           <rect>
-<<<<<<< HEAD
-           <x>240</x>
-           <y>70</y>
-           <width>110</width>
-           <height>26</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true"> border: 1px solid black; 
- border-radius: 5px; </string>
-         </property>
-        </widget>
-        <widget class="QDateEdit" name="dateEdit_4">
-         <property name="geometry">
-          <rect>
-           <x>240</x>
-           <y>120</y>
-           <width>110</width>
-           <height>26</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true"> border: 1px solid black; 
- border-radius: 5px; </string>
-         </property>
-        </widget>
-        <widget class="QLabel" name="label_95">
-         <property name="geometry">
-          <rect>
-           <x>260</x>
-           <y>10</y>
-           <width>181</width>
-           <height>51</height>
-          </rect>
-         </property>
-         <property name="font">
-          <font>
-           <family>Segoe UI Semibold</family>
-           <pointsize>20</pointsize>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>PDF</string>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="pushButton_13">
-         <property name="geometry">
-          <rect>
-           <x>210</x>
-           <y>430</y>
-           <width>141</width>
-           <height>41</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(156, 124, 56);
-border-radius:4px;</string>
-         </property>
-         <property name="text">
-          <string>Statistique</string>
-         </property>
-        </widget>
-        <widget class="QDateEdit" name="dateEdit_5">
-         <property name="geometry">
-          <rect>
-           <x>240</x>
-           <y>320</y>
-=======
            <x>130</x>
            <y>10</y>
->>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
            <width>110</width>
            <height>26</height>
           </rect>
          </property>
-<<<<<<< HEAD
-         <property name="styleSheet">
-          <string notr="true"> border: 1px solid black; 
- border-radius: 5px; </string>
-         </property>
-        </widget>
-        <widget class="QDateEdit" name="dateEdit_6">
-         <property name="geometry">
-          <rect>
-           <x>240</x>
-           <y>380</y>
-           <width>110</width>
-           <height>26</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true"> border: 1px solid black; 
- border-radius: 5px; </string>
-         </property>
-        </widget>
-        <widget class="QLabel" name="label_96">
-         <property name="geometry">
-          <rect>
-           <x>40</x>
-           <y>320</y>
-           <width>111</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="font">
-          <font>
-           <family>Segoe UI Semibold</family>
-           <pointsize>12</pointsize>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>date début</string>
-         </property>
-        </widget>
-        <widget class="QLabel" name="label_97">
-         <property name="geometry">
-          <rect>
-           <x>50</x>
-           <y>380</y>
-           <width>81</width>
-           <height>31</height>
-          </rect>
-         </property>
-         <property name="font">
-          <font>
-           <family>Segoe UI Semibold</family>
-           <pointsize>12</pointsize>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>date fin</string>
-         </property>
-        </widget>
-        <widget class="QLabel" name="label_98">
-         <property name="geometry">
-          <rect>
-           <x>200</x>
-           <y>240</y>
-           <width>181</width>
-           <height>51</height>
-          </rect>
-         </property>
-         <property name="font">
-          <font>
-           <family>Segoe UI Semibold</family>
-           <pointsize>20</pointsize>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>statistique</string>
-         </property>
-        </widget>
-        <widget class="QLabel" name="label_99">
-         <property name="geometry">
-          <rect>
-           <x>450</x>
-           <y>50</y>
-           <width>111</width>
-           <height>91</height>
-          </rect>
-         </property>
-         <property name="font">
-          <font>
-           <family>Segoe UI Semibold</family>
-           <pointsize>12</pointsize>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap>../QtDesignStudio/pngegg (4).png</pixmap>
-         </property>
-         <property name="scaledContents">
-          <bool>true</bool>
-         </property>
-        </widget>
-        <widget class="QLabel" name="label_100">
-         <property name="geometry">
-          <rect>
-           <x>460</x>
-           <y>220</y>
-           <width>141</width>
-           <height>101</height>
-          </rect>
-         </property>
-         <property name="font">
-          <font>
-           <family>Segoe UI Semibold</family>
-           <pointsize>12</pointsize>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap>../QtDesignStudio/pngegg (3).png</pixmap>
-         </property>
-         <property name="scaledContents">
-          <bool>true</bool>
-         </property>
-        </widget>
-        <widget class="QLabel" name="label_101">
-         <property name="geometry">
-          <rect>
-           <x>440</x>
-           <y>370</y>
-           <width>111</width>
-           <height>91</height>
-          </rect>
-         </property>
-         <property name="font">
-          <font>
-           <family>Segoe UI Semibold</family>
-           <pointsize>12</pointsize>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap>../QtDesignStudio/pngegg (5).png</pixmap>
-         </property>
-         <property name="scaledContents">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </widget>
-       <widget class="QWidget" name="tab_2">
-        <attribute name="title">
-         <string>Page</string>
-        </attribute>
-        <widget class="QPushButton" name="pushButton_47">
-         <property name="geometry">
-          <rect>
-           <x>260</x>
-           <y>300</y>
-           <width>93</width>
-           <height>29</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(156, 124, 56);
-border-radius:4px;</string>
-         </property>
-         <property name="text">
-          <string>TVA</string>
-         </property>
-        </widget>
-        <widget class="QLineEdit" name="lineEdit_25">
-         <property name="geometry">
-          <rect>
-           <x>60</x>
-           <y>150</y>
-           <width>491</width>
-           <height>91</height>
-          </rect>
-         </property>
-        </widget>
-        <widget class="QLabel" name="label_11">
-         <property name="geometry">
-          <rect>
-           <x>210</x>
-           <y>40</y>
-           <width>191</width>
-           <height>51</height>
-          </rect>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>20</pointsize>
-           <italic>true</italic>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Taux TVA</string>
-         </property>
-=======
->>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
         </widget>
        </widget>
       </widget>
@@ -2453,11 +2070,7 @@ border-radius:5px;</string>
         </rect>
        </property>
        <property name="currentIndex">
-<<<<<<< HEAD
-        <number>2</number>
-=======
         <number>0</number>
->>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
        </property>
        <widget class="QWidget" name="tab_9">
         <attribute name="title">
@@ -2928,11 +2541,7 @@ border-radius:5px;</string>
         </rect>
        </property>
        <property name="currentIndex">
-<<<<<<< HEAD
-        <number>3</number>
-=======
         <number>0</number>
->>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
        </property>
        <widget class="QWidget" name="tab_12">
         <attribute name="title">

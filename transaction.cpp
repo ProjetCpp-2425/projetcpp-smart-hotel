@@ -4,8 +4,11 @@
 #include <QSqlError>
 #include <QVariant>
 #include <QDebug>
+<<<<<<< HEAD
 #include <iostream>
 #include <vector>
+=======
+>>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
 
 Transaction::Transaction()
     : id_transaction(0), type_transaction(""), date_transaction(""), etat_paiement("impayé"),
@@ -23,7 +26,10 @@ QString Transaction::getetat_paiement() const { return etat_paiement; }
 QString Transaction::getmode_paiement() const { return mode_paiement; }
 double Transaction::getmontant_total() const { return montant_total; }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
 void Transaction::setid_transaction(int id) { id_transaction = id; }
 void Transaction::settype_transaction(const QString& type) { type_transaction = type; }
 void Transaction::setdate_transaction(const QString& date) { date_transaction = date; }
@@ -34,6 +40,7 @@ void Transaction::setmontant_total(double montant) { montant_total = montant; }
 bool Transaction::ajouter()
 {
     QSqlQuery query;
+<<<<<<< HEAD
     query.prepare("INSERT INTO transaction (id_transaction, type_transaction, date_transaction, etat_paiement, mode_paiement, montant_total) "
                   "VALUES (:id_transaction, :type_transaction, TO_DATE(:date_transaction, 'YYYY-MM-DD'), :etat_paiement, :mode_paiement, :montant_total)");
     query.bindValue(":id_transaction", id_transaction);
@@ -41,6 +48,15 @@ bool Transaction::ajouter()
     query.bindValue(":date_transaction", date_transaction);
     query.bindValue(":etat_paiement", etat_paiement);
      query.bindValue(":mode_paiement", mode_paiement);
+=======
+    query.prepare("INSERT INTO transaction (id_transaction, type_transaction, date_transaction, mode_paiement, etat_paiement, montant_total) "
+                  "VALUES (:id_transaction, :type_transaction, TO_DATE(:date_transaction, 'YYYY-MM-DD'), :mode_paiement, :etat_paiement, :montant_total)");
+    query.bindValue(":id_transaction", id_transaction);
+    query.bindValue(":type_transaction", type_transaction);
+    query.bindValue(":date_transaction", date_transaction);
+    query.bindValue(":mode_paiement", mode_paiement);
+    query.bindValue(":etat_paiement", etat_paiement);
+>>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
     query.bindValue(":montant_total", montant_total);
 
     return query.exec();
@@ -54,24 +70,39 @@ bool Transaction::supprimer(int id)
     return query.exec() && query.numRowsAffected() > 0;
 }
 
+<<<<<<< HEAD
 bool Transaction::modifier(int id_transaction, QString type_transaction, QString date_transaction,QString etat_paiement,
                            QString mode_paiement, float montant_total)
 {
     QSqlQuery query;
     query.prepare("UPDATE transaction SET type_transaction = :type_transaction, date_transaction = TO_DATE(:date_transaction, 'YYYY-MM-DD'), "
                   "etat_paiement = :etat_paiement,mode_paiement = :mode_paiement,  montant_total = :montant_total "
+=======
+bool Transaction::modifier(int id_transaction, QString type_transaction, QString date_transaction,
+                           QString mode_paiement, QString etat_paiement, float montant_total)
+{
+    QSqlQuery query;
+    query.prepare("UPDATE transaction SET type_transaction = :type_transaction, date_transaction = TO_DATE(:date_transaction, 'YYYY-MM-DD'), "
+                  "mode_paiement = :mode_paiement, etat_paiement = :etat_paiement, montant_total = :montant_total "
+>>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
                   "WHERE id_transaction = :id_transaction");
     query.bindValue(":id_transaction", id_transaction);
     query.bindValue(":type_transaction", type_transaction);
     query.bindValue(":date_transaction", date_transaction);
+<<<<<<< HEAD
 
     query.bindValue(":etat_paiement", etat_paiement);
       query.bindValue(":mode_paiement", mode_paiement);
+=======
+    query.bindValue(":mode_paiement", mode_paiement);
+    query.bindValue(":etat_paiement", etat_paiement);
+>>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
     query.bindValue(":montant_total", montant_total);
 
     return query.exec();
 }
 
+<<<<<<< HEAD
 double Transaction::calculerSommeDepenses()
 {
     QSqlQuery query;
@@ -84,5 +115,7 @@ double Transaction::calculerSommeDepenses()
     }
     return 0.0;
 }
+=======
+>>>>>>> f10aabdcfcd02b447f691da1d2153209c3578cb8
 
 
