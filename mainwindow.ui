@@ -395,7 +395,7 @@ border-radius:5px;</string>
       </rect>
      </property>
      <property name="currentIndex">
-      <number>6</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="page">
       <widget class="QLabel" name="label_2">
@@ -415,6 +415,355 @@ border-radius:5px;</string>
        </property>
        <property name="scaledContents">
         <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_11">
+       <property name="geometry">
+        <rect>
+         <x>230</x>
+         <y>20</y>
+         <width>391</width>
+         <height>491</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);
+border-radius:10px;</string>
+       </property>
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_82">
+       <property name="geometry">
+        <rect>
+         <x>420</x>
+         <y>40</y>
+         <width>141</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Urdu Typesetting</family>
+         <pointsize>20</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Log in</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_login">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>380</y>
+         <width>161</width>
+         <height>51</height>
+        </rect>
+       </property>
+       <property name="palette">
+        <palette>
+         <active>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>166</red>
+             <green>163</green>
+             <blue>66</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Base">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>166</red>
+             <green>163</green>
+             <blue>66</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Window">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>166</red>
+             <green>163</green>
+             <blue>66</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>166</red>
+             <green>163</green>
+             <blue>66</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Base">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>166</red>
+             <green>163</green>
+             <blue>66</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Window">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>166</red>
+             <green>163</green>
+             <blue>66</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>166</red>
+             <green>163</green>
+             <blue>66</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Base">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>166</red>
+             <green>163</green>
+             <blue>66</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Window">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>166</red>
+             <green>163</green>
+             <blue>66</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </disabled>
+        </palette>
+       </property>
+       <property name="font">
+        <font>
+         <family>Urdu Typesetting</family>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(166, 163, 66);</string>
+       </property>
+       <property name="text">
+        <string>Log in</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_cin2">
+       <property name="geometry">
+        <rect>
+         <x>332</x>
+         <y>140</y>
+         <width>231</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(0,0,0,0);
+border:2px solid rgba(0,0,0,0);
+border-bottom-color:rgba(46,82,101,200);
+color: rgb(167, 167, 167);
+padding-bottom:7px;</string>
+       </property>
+       <property name="text">
+        <string>CIN</string>
+       </property>
+       <property name="placeholderText">
+        <string>user name</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_mdp2">
+       <property name="geometry">
+        <rect>
+         <x>330</x>
+         <y>270</y>
+         <width>231</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(0,0,0,0);
+
+border:2px solid rgba(0,0,0,0);
+border-bottom-color:rgba(46,82,101,200);
+color: rgb(148, 148, 148);
+
+padding-bottom:7px;</string>
+       </property>
+       <property name="text">
+        <string>Mot de passe</string>
+       </property>
+       <property name="echoMode">
+        <enum>QLineEdit::Normal</enum>
+       </property>
+       <property name="placeholderText">
+        <string>password</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_93">
+       <property name="geometry">
+        <rect>
+         <x>-58</x>
+         <y>149</y>
+         <width>291</width>
+         <height>281</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap>../QtDesignStudio/Capture d'écran 2024-09-29 231547.png</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_94">
+       <property name="geometry">
+        <rect>
+         <x>-110</x>
+         <y>10</y>
+         <width>411</width>
+         <height>551</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(0, 0, 0);
+border-radius:10px;</string>
+       </property>
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_forgotPassword">
+       <property name="geometry">
+        <rect>
+         <x>370</x>
+         <y>440</y>
+         <width>161</width>
+         <height>51</height>
+        </rect>
+       </property>
+       <property name="palette">
+        <palette>
+         <active>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>166</red>
+             <green>163</green>
+             <blue>66</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Base">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>166</red>
+             <green>163</green>
+             <blue>66</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Window">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>166</red>
+             <green>163</green>
+             <blue>66</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>166</red>
+             <green>163</green>
+             <blue>66</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Base">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>166</red>
+             <green>163</green>
+             <blue>66</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Window">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>166</red>
+             <green>163</green>
+             <blue>66</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>166</red>
+             <green>163</green>
+             <blue>66</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Base">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>166</red>
+             <green>163</green>
+             <blue>66</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Window">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>166</red>
+             <green>163</green>
+             <blue>66</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </disabled>
+        </palette>
+       </property>
+       <property name="font">
+        <font>
+         <family>Urdu Typesetting</family>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(166, 163, 66);</string>
+       </property>
+       <property name="text">
+        <string>mot de passe oublié ?</string>
        </property>
       </widget>
      </widget>
@@ -3343,7 +3692,7 @@ border-radius:5px;</string>
           <string>supprimer</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_38">
+        <widget class="QPushButton" name="pushButton_statistique">
          <property name="geometry">
           <rect>
            <x>400</x>
@@ -3389,20 +3738,20 @@ border-radius:5px;</string>
         <widget class="QLabel" name="label_77">
          <property name="geometry">
           <rect>
-           <x>20</x>
-           <y>140</y>
-           <width>37</width>
+           <x>410</x>
+           <y>60</y>
+           <width>201</width>
            <height>20</height>
           </rect>
          </property>
          <property name="text">
-          <string>Rôle :</string>
+          <string>Quelle est la ville où vous êtes né(e) ?</string>
          </property>
         </widget>
         <widget class="QLabel" name="label_78">
          <property name="geometry">
           <rect>
-           <x>300</x>
+           <x>240</x>
            <y>100</y>
            <width>38</width>
            <height>20</height>
@@ -3415,7 +3764,7 @@ border-radius:5px;</string>
         <widget class="QLabel" name="label_79">
          <property name="geometry">
           <rect>
-           <x>300</x>
+           <x>240</x>
            <y>140</y>
            <width>52</width>
            <height>20</height>
@@ -3451,83 +3800,7 @@ border-radius:5px;</string>
           <string>Poste :</string>
          </property>
         </widget>
-        <widget class="QComboBox" name="comboBox_14">
-         <property name="geometry">
-          <rect>
-           <x>130</x>
-           <y>220</y>
-           <width>80</width>
-           <height>26</height>
-          </rect>
-         </property>
-         <item>
-          <property name="text">
-           <string>Id</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Nom</string>
-          </property>
-         </item>
-        </widget>
-        <widget class="QLabel" name="label_82">
-         <property name="geometry">
-          <rect>
-           <x>322</x>
-           <y>220</y>
-           <width>71</width>
-           <height>20</height>
-          </rect>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>trier par:</string>
-         </property>
-        </widget>
-        <widget class="QComboBox" name="comboBox_15">
-         <property name="geometry">
-          <rect>
-           <x>420</x>
-           <y>220</y>
-           <width>80</width>
-           <height>26</height>
-          </rect>
-         </property>
-         <item>
-          <property name="text">
-           <string>Salaire</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Date d'embauche </string>
-          </property>
-         </item>
-        </widget>
-        <widget class="QLabel" name="label_83">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>220</y>
-           <width>101</width>
-           <height>20</height>
-          </rect>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>chercher par:</string>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="pushButton_40">
+        <widget class="QPushButton" name="pushButton_pdf">
          <property name="geometry">
           <rect>
            <x>500</x>
@@ -3650,12 +3923,12 @@ border-radius:5px;</string>
           </rect>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_role">
+        <widget class="QLineEdit" name="lineEdit_question">
          <property name="geometry">
           <rect>
-           <x>100</x>
-           <y>140</y>
-           <width>113</width>
+           <x>410</x>
+           <y>100</y>
+           <width>201</width>
            <height>26</height>
           </rect>
          </property>
@@ -3663,7 +3936,7 @@ border-radius:5px;</string>
         <widget class="QLineEdit" name="lineEdit_sexe">
          <property name="geometry">
           <rect>
-           <x>350</x>
+           <x>290</x>
            <y>100</y>
            <width>113</width>
            <height>26</height>
@@ -3673,7 +3946,7 @@ border-radius:5px;</string>
         <widget class="QLineEdit" name="lineEdit_salaire">
          <property name="geometry">
           <rect>
-           <x>350</x>
+           <x>290</x>
            <y>140</y>
            <width>113</width>
            <height>26</height>
@@ -3693,20 +3966,20 @@ border-radius:5px;</string>
         <widget class="QLabel" name="label_91">
          <property name="geometry">
           <rect>
-           <x>300</x>
+           <x>240</x>
            <y>60</y>
            <width>40</width>
            <height>20</height>
           </rect>
          </property>
          <property name="text">
-          <string>ID :</string>
+          <string>Cin :</string>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_id">
+        <widget class="QLineEdit" name="lineEdit_cin">
          <property name="geometry">
           <rect>
-           <x>350</x>
+           <x>290</x>
            <y>60</y>
            <width>113</width>
            <height>26</height>
@@ -3721,6 +3994,66 @@ border-radius:5px;</string>
            <width>571</width>
            <height>151</height>
           </rect>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_chercher">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>220</y>
+           <width>101</width>
+           <height>29</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(156, 124, 56);
+border-radius:5px;</string>
+         </property>
+         <property name="text">
+          <string>recher par cin</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_trierParSalaire">
+         <property name="geometry">
+          <rect>
+           <x>400</x>
+           <y>220</y>
+           <width>101</width>
+           <height>29</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(156, 124, 56);
+border-radius:5px;</string>
+         </property>
+         <property name="text">
+          <string>tri par salaire</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_mdp">
+         <property name="geometry">
+          <rect>
+           <x>100</x>
+           <y>140</y>
+           <width>113</width>
+           <height>26</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_92">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>140</y>
+           <width>81</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Mot de passe :</string>
          </property>
         </widget>
        </widget>

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql
+QT       += core gui sql printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -28,12 +28,14 @@ SOURCES += \
     employe.cpp \
         main.cpp \
         mainwindow.cpp \
-    connection.cpp
+    connection.cpp \
+    statistique.cpp
 
 HEADERS += \
     employe.h \
         mainwindow.h \
-    connection.h
+    connection.h \
+    statistique.h
 
 FORMS += \
         mainwindow.ui

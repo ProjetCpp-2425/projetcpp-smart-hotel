@@ -1,0 +1,35 @@
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+#include<QSystemTrayIcon>
+#include <QMainWindow>
+#include <QDate>
+#include "employe.h"
+
+QT_BEGIN_NAMESPACE
+namespace Ui { class MainWindow; }
+QT_END_NAMESPACE
+
+class MainWindow : public QMainWindow {
+    Q_OBJECT
+
+public:
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
+
+private slots:
+    void on_pushButton_ajouter_clicked();
+    void on_pushButton_modifier_clicked();
+    void on_pushButton_supprimer_clicked();
+    void on_pushButton_chercher_clicked();
+    void on_pushButton_pdf_clicked();
+    void on_pushButton_statistique_clicked();
+    void on_pushButton_trierParSalaire_clicked();
+
+
+private:
+    bool validateInputs(int cin, const QString &nom, const QString &prenom, const QString &role, const QString &sexe, const QString &poste, const float &salaire, const QString &mot_de_passe);
+    Ui::MainWindow *ui;
+    Employe employe;  // Instance de la classe Employe
+};
+
+#endif // MAINWINDOW_H
