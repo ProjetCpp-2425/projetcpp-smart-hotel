@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1326</width>
-    <height>746</height>
+    <width>1404</width>
+    <height>857</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -91,9 +91,9 @@
    <widget class="QLabel" name="label_14">
     <property name="geometry">
      <rect>
-      <x>230</x>
-      <y>310</y>
-      <width>141</width>
+      <x>200</x>
+      <y>290</y>
+      <width>171</width>
       <height>20</height>
      </rect>
     </property>
@@ -123,31 +123,6 @@
     <property name="text">
      <string>Nom du client </string>
     </property>
-   </widget>
-   <widget class="QComboBox" name="comboBox">
-    <property name="geometry">
-     <rect>
-      <x>740</x>
-      <y>310</y>
-      <width>68</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <item>
-     <property name="text">
-      <string>nom</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>CIN</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>date</string>
-     </property>
-    </item>
    </widget>
    <widget class="QLabel" name="label_15">
     <property name="geometry">
@@ -370,7 +345,7 @@ background-color: rgb(255, 255, 255);</string>
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>../../../OneDrive/Documents/client3/20.png</normaloff>../../../OneDrive/Documents/client3/20.png</iconset>
+       <normaloff>../../Documents/client3/20.png</normaloff>../../Documents/client3/20.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_2">
@@ -390,7 +365,7 @@ background-color: rgb(255, 255, 255);</string>
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>../../../OneDrive/Documents/client3/3.png</normaloff>../../../OneDrive/Documents/client3/3.png</iconset>
+       <normaloff>../../Documents/client3/3.png</normaloff>../../Documents/client3/3.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton">
@@ -412,7 +387,7 @@ background-color: rgb(255, 255, 255);</string>
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>../../../OneDrive/Documents/client3/17.png</normaloff>../../../OneDrive/Documents/client3/17.png</iconset>
+       <normaloff>../../Documents/client3/17.png</normaloff>../../Documents/client3/17.png</iconset>
      </property>
     </widget>
    </widget>
@@ -454,7 +429,7 @@ background-color: rgb(255, 255, 255);</string>
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>../../../OneDrive/Documents/client3/2.png</normaloff>../../../OneDrive/Documents/client3/2.png</iconset>
+       <normaloff>../../Documents/client3/2.png</normaloff>../../Documents/client3/2.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_7">
@@ -471,7 +446,7 @@ background-color: rgb(255, 255, 255);</string>
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>../../../OneDrive/Documents/client3/12.png</normaloff>../../../OneDrive/Documents/client3/12.png</iconset>
+       <normaloff>../../Documents/client3/12.png</normaloff>../../Documents/client3/12.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_8">
@@ -488,7 +463,7 @@ background-color: rgb(255, 255, 255);</string>
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>../../../OneDrive/Documents/client3/6.png</normaloff>../../../OneDrive/Documents/client3/6.png</iconset>
+       <normaloff>../../Documents/client3/6.png</normaloff>../../Documents/client3/6.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_9">
@@ -505,7 +480,7 @@ background-color: rgb(255, 255, 255);</string>
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>../../../OneDrive/Documents/client3/14.png</normaloff>../../../OneDrive/Documents/client3/14.png</iconset>
+       <normaloff>../../Documents/client3/14.png</normaloff>../../Documents/client3/14.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_10">
@@ -522,7 +497,7 @@ background-color: rgb(255, 255, 255);</string>
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>../../../OneDrive/Documents/client3/10.png</normaloff>../../../OneDrive/Documents/client3/10.png</iconset>
+       <normaloff>../../Documents/client3/10.png</normaloff>../../Documents/client3/10.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_11">
@@ -539,7 +514,7 @@ background-color: rgb(255, 255, 255);</string>
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>../../../OneDrive/Documents/client3/4.png</normaloff>../../../OneDrive/Documents/client3/4.png</iconset>
+       <normaloff>../../Documents/client3/4.png</normaloff>../../Documents/client3/4.png</iconset>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_12">
@@ -556,7 +531,7 @@ background-color: rgb(255, 255, 255);</string>
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>../../../OneDrive/Documents/client3/16.png</normaloff>../../../OneDrive/Documents/client3/16.png</iconset>
+       <normaloff>../../Documents/client3/16.png</normaloff>../../Documents/client3/16.png</iconset>
      </property>
     </widget>
     <widget class="QLabel" name="label_16">
@@ -572,7 +547,7 @@ background-color: rgb(255, 255, 255);</string>
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>../../../OneDrive/Documents/client3/1.png</pixmap>
+      <pixmap>../../Documents/client3/1.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -644,11 +619,11 @@ background-color: rgb(255, 255, 255);</string>
      </rect>
     </property>
    </widget>
-   <widget class="QLineEdit" name="dateNaissanceLineEdit">
+   <widget class="QLineEdit" name="telephoneSearchLineEdit">
     <property name="geometry">
      <rect>
-      <x>340</x>
-      <y>200</y>
+      <x>370</x>
+      <y>290</y>
       <width>121</width>
       <height>21</height>
      </rect>
@@ -687,7 +662,7 @@ background-color: rgb(255, 255, 255);</string>
     <widget class="QWidget" name="page"/>
     <widget class="QWidget" name="page_2"/>
    </widget>
-   <widget class="QPushButton" name="Modifier">
+   <widget class="QPushButton" name="modifierButton">
     <property name="geometry">
      <rect>
       <x>910</x>
@@ -747,32 +722,7 @@ background-color: rgb(255, 255, 255);</string>
      <string>Imprimer</string>
     </property>
    </widget>
-   <widget class="QComboBox" name="comboBox_2">
-    <property name="geometry">
-     <rect>
-      <x>380</x>
-      <y>310</y>
-      <width>68</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <item>
-     <property name="text">
-      <string>numero</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>datec</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string/>
-     </property>
-    </item>
-   </widget>
-   <widget class="QPushButton" name="Statistique">
+   <widget class="QPushButton" name="statistiquesButton">
     <property name="geometry">
      <rect>
       <x>710</x>
@@ -883,13 +833,157 @@ background-color: rgb(255, 255, 255);</string>
      </rect>
     </property>
    </widget>
+   <widget class="QPushButton" name="trierCinButton">
+    <property name="geometry">
+     <rect>
+      <x>760</x>
+      <y>310</y>
+      <width>93</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>cin</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="trierDateButton">
+    <property name="geometry">
+     <rect>
+      <x>900</x>
+      <y>310</y>
+      <width>93</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>date</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="chercherButton">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>320</y>
+      <width>93</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Chercher</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="sendChatButton">
+    <property name="geometry">
+     <rect>
+      <x>810</x>
+      <y>690</y>
+      <width>93</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>chat send</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="exportCsvButton">
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>460</y>
+      <width>93</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>exel</string>
+    </property>
+   </widget>
+   <widget class="QDateEdit" name="dateNaissanceLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>200</y>
+      <width>110</width>
+      <height>26</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="inputTextEdit">
+    <property name="geometry">
+     <rect>
+      <x>1050</x>
+      <y>320</y>
+      <width>113</width>
+      <height>26</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="arriveeButton">
+    <property name="geometry">
+     <rect>
+      <x>1080</x>
+      <y>430</y>
+      <width>93</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>arrive</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="historiqueButton">
+    <property name="geometry">
+     <rect>
+      <x>1070</x>
+      <y>500</y>
+      <width>93</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>historique</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="cinArriveeLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>1180</x>
+      <y>430</y>
+      <width>113</width>
+      <height>26</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="chatbutton">
+    <property name="geometry">
+     <rect>
+      <x>810</x>
+      <y>640</y>
+      <width>93</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>chatbutton</string>
+    </property>
+   </widget>
+   <widget class="QTableView" name="chatbotview">
+    <property name="geometry">
+     <rect>
+      <x>900</x>
+      <y>540</y>
+      <width>501</width>
+      <height>251</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1326</width>
+     <width>1404</width>
      <height>26</height>
     </rect>
    </property>
