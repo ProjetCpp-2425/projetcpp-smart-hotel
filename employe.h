@@ -43,12 +43,18 @@ public:
     void setSalaire(float salaire);
     void setMot_de_passe(QString mot_de_passe);
 
+    std::map<QString, int> statNbrPerType();
+
     // Database methods
     bool ajouter();
     bool modifier(int cin);
     bool supprimer(int cin);
     QSqlQueryModel *afficher();
     QSqlQueryModel* rechercheByCin(int cin);
+
+
+
+
 
 };
 

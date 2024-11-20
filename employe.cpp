@@ -3,7 +3,13 @@
 #include <QDebug>
 #include <QSqlQuery>
 #include <QDate>
+#include <map>
+#include <QString>
 
+#include <QtCharts>
+#include <QChartView>
+#include <QPieSeries>
+#include <QPieSlice>
 
 // Constructors
 Employe::Employe() {}
@@ -133,4 +139,29 @@ QSqlQueryModel* Employe::rechercheByCin(int cin) {
     }
 
     return model;
+}
+
+std::map<QString, int> Employe::statNbrPerType() {
+    QSqlQuery query;
+    std::map<QString, int> list;
+
+    try {
+        query.prepare("SELECT poste, COUNT(*) AS nbr_employes FROM employe GROUP BY poste");
+
+        if (query.exec()) {
+            while (query.next()) {
+                QString poste = query.value(0).toString();  // Assurez-vous que cela est correct
+                int nbrEmployes = query.value(1).toInt();
+                list.insert({poste, nbrEmployes});
+            }
+        } else {
+            qDebug() << "Erreur lors de l'exécution de la requête : " << query.lastError().text();
+        }
+
+    } catch (...) {
+        qDebug() << "Une exception s'est produite lors de l'extraction des statistiques.";
+        list["error"] = 0;
+    }
+
+    return list;
 }

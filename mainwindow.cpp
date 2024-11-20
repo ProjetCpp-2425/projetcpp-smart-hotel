@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QDebug>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>
@@ -10,31 +11,173 @@
 #include <QFileDialog>
 #include "statistique.h"
 #include <QInputDialog>
+#include <QtCharts/QChart>
+#include <QtCharts/QBarSet>
+#include <QtCharts/QBarSeries>
+#include <QtCharts/QBarCategoryAxis>
+#include <QtCharts/QChartView>
 
 
-// Constructor
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent),
-      ui(new Ui::MainWindow),
-      employe()
-{
-    ui->setupUi(this);
+    : QMainWindow(parent), ui(new Ui::MainWindow) {
+    ui->setupUi(this); // Initialisation correcte de l'interface utilisateur
 
-    // Set up placeholders and masked input for login fields
+    // Set up placeholders and masked input
     ui->lineEdit_cin2->setPlaceholderText("Entrez votre CIN");
     ui->lineEdit_mdp2->setPlaceholderText("Entrez votre mot de passe");
-    ui->lineEdit_mdp2->setEchoMode(QLineEdit::Password); // Mask password
+    ui->lineEdit_mdp2->setEchoMode(QLineEdit::Password);
 
-    // Initialize employee management table and default date
+    // Set up employee management
     ui->tableView->setModel(employe.afficher());
     ui->dateEdit_date_embauche->setDate(QDate::currentDate());
 
-    // Connect employee management buttons
-    connect(ui->pushButton_ajouter, &QPushButton::clicked, this, &MainWindow::on_pushButton_ajouter_clicked);
-    connect(ui->pushButton_modifier, &QPushButton::clicked, this, &MainWindow::on_pushButton_modifier_clicked);
-    connect(ui->pushButton_supprimer, &QPushButton::clicked, this, &MainWindow::on_pushButton_supprimer_clicked);
+    connect(ui->pushButton_pdf, &QPushButton::clicked, this, &MainWindow::on_pushButton_pdf_clicked);
+
+
+    // Connect CAPTCHA generation and validation
+    connect(ui->refreshCaptchaButton, &QPushButton::clicked, this, &MainWindow::regenerateCaptcha);
+    connect(ui->validateCaptchaButton, &QPushButton::clicked, this, &MainWindow::validateCaptcha);
+
+    connect(ui->pushButton_envoyer, &QPushButton::clicked, this, &MainWindow::on_pushButton_envoyer_clicked);
+
+
+    // Generate initial CAPTCHA
+    regenerateCaptcha();
 }
 
+MainWindow::~MainWindow() {
+    delete ui;
+}
+
+void MainWindow::on_pushButton_statistique_clicked()
+{
+    try {
+        // Crée un graphique (QChart) pour afficher les statistiques
+        QChart *chart = new QChart();
+        QBarSeries *series = new QBarSeries();
+        QBarCategoryAxis *axis = new QBarCategoryAxis();
+
+        QBarSet *set = new QBarSet("Nombre d'Employés");
+        QStringList postesList;
+
+        // Exécute une requête SQL pour récupérer les statistiques
+        QSqlQuery query;
+        query.prepare("SELECT poste, COUNT(*) AS count FROM employe GROUP BY poste");
+
+        if (query.exec()) {
+            while (query.next()) {
+                QString poste = query.value(0).toString(); // Récupère le nom du poste
+                int count = query.value(1).toInt();       // Récupère le nombre d'employés pour ce poste
+
+                postesList.append(poste);
+                *set << count; // Ajoute le nombre au jeu de barres
+            }
+
+            series->append(set);
+            chart->addSeries(series);
+            chart->setAnimationOptions(QChart::AllAnimations);
+            axis->append(postesList);
+
+            // Configure l'axe X et Y
+            chart->createDefaultAxes();
+            chart->addAxis(axis, Qt::AlignBottom); // Ajoute l'axe X au bas du graphique
+            series->attachAxis(axis);             // Lie la série à l'axe X
+            chart->legend()->setAlignment(Qt::AlignBottom);
+
+            // Configure l'apparence du graphique
+            QPalette pal = qApp->palette();
+            pal.setColor(QPalette::Window, QRgb(0x0d4261));
+            pal.setColor(QPalette::WindowText, QRgb(0x95212c));
+            qApp->setPalette(pal);
+
+            QFont font;
+            font.setPixelSize(18);
+            chart->setTitleFont(font);
+            chart->setTitleBrush(QBrush(Qt::red));
+            chart->setTitle("Statistiques : Nombre d'Employés par Poste");
+
+            // Configure la vue du graphique
+            QChartView *chartView = new QChartView(chart);
+            chartView->setRenderHint(QPainter::Antialiasing);
+            chartView->setChart(chart); // Assurez-vous que 'chartContainer' est un widget dans votre interface
+            chartView->showNormal();
+            chartView->show();
+
+        } else {
+            qDebug() << "Erreur lors de l'exécution de la requête:" << query.lastError().text();
+        }
+    } catch (...) {
+        qDebug() << "Une erreur inattendue s'est produite.";
+    }
+}
+
+void MainWindow::on_pushButton_envoyer_clicked() {
+    // Récupérer les données des champs
+    QString cin = ui->lineEdit_cin3->text();
+    QString nomPrenom = ui->lineEdit_nomprenom_5->text();
+    QDate dateDebut = ui->dateEdit_dd->date();
+    QDate dateFin = ui->dateEdit_df->date();
+    QString typeAbsence = ui->comboBox_abs->currentText();
+
+    // Vérifier si les champs sont remplis
+    if (cin.isEmpty() || nomPrenom.isEmpty()) {
+        QMessageBox::warning(this, "Erreur", "Veuillez remplir tous les champs obligatoires.");
+        return;
+    }
+
+    // Vérifier que la date de fin est après la date de début
+    if (dateFin < dateDebut) {
+        QMessageBox::warning(this, "Erreur", "La date de fin doit être postérieure à la date de début.");
+        return;
+    }
+
+    // Calculer le nombre de jours d'absence
+    int joursAbsence = calculerJoursAbsence(dateDebut, dateFin);
+
+    // Insérer les données dans la base
+    QSqlQuery query;
+    query.prepare("INSERT INTO absences (cin, nom_prenom, date_debut, date_fin, type_absence, jours_absence) "
+                  "VALUES (:cin, :nom_prenom, :date_debut, :date_fin, :type_absence, :jours_absence)");
+    query.bindValue(":cin", cin);
+    query.bindValue(":nom_prenom", nomPrenom);
+    query.bindValue(":date_debut", dateDebut);
+    query.bindValue(":date_fin", dateFin);
+    query.bindValue(":type_absence", typeAbsence);
+    query.bindValue(":jours_absence", joursAbsence);
+
+    if (query.exec()) {
+        QMessageBox::information(this, "Succès", QString("Demande envoyée avec succès !\n"
+                                                         "Nombre de jours d'absence : %1").arg(joursAbsence));
+    } else {
+        QMessageBox::critical(this, "Erreur", QString("Échec de l'envoi de la demande.\nErreur : %1")
+                                               .arg(query.lastError().text()));
+    }
+}
+
+int MainWindow::calculerJoursAbsence(const QDate &dateDebut, const QDate &dateFin) {
+    // Calculer la différence entre les deux dates
+    return dateDebut.daysTo(dateFin) + 1; // Inclure le premier jour
+}
+
+void MainWindow::validateCaptcha() {
+    int userInput = ui->captchaInput->text().toInt(); // Read user input
+
+    if (userInput == generatedCaptcha) {
+        QMessageBox::information(this, "Succès", "Le CAPTCHA est correct !");
+    } else {
+        QMessageBox::warning(this, "Erreur", "Le CAPTCHA est incorrect. Veuillez réessayer.");
+        ui->captchaInput->clear(); // Clear input field
+        regenerateCaptcha();       // Generate new CAPTCHA
+    }
+}
+
+void MainWindow::regenerateCaptcha() {
+    // Generate a random 6-digit number
+    generatedCaptcha = QRandomGenerator::global()->bounded(100000, 1000000); // Correct inclusive bounds
+
+    // Display the CAPTCHA in the label
+    ui->captchaLabel->setText(QString::number(generatedCaptcha));
+}
 
 
 // Validate login inputs (CIN and password)
@@ -136,13 +279,7 @@ void MainWindow::on_pushButton_forgotPassword_clicked()
     }
 }
 
-
-// Destructor
-MainWindow::~MainWindow() {
-    delete ui;
-}
-
-// Function to handle exporting statistics to PDF
+/*// Function to handle exporting statistics to PDF
 void MainWindow::on_pushButton_statistique_clicked() {
     // Get the filename and path for saving the PDF
     QString fileName = QFileDialog::getSaveFileName(this, "Exporter les Statistiques en PDF", "", "Fichiers PDF (*.pdf)");
@@ -159,7 +296,7 @@ void MainWindow::on_pushButton_statistique_clicked() {
 
     // Show a message confirming the export
     QMessageBox::information(this, "Exportation réussie", "Les statistiques ont été exportées avec succès.");
-}
+}*/
 
 // Function to export the table data to a PDF
 void MainWindow::on_pushButton_pdf_clicked()
@@ -294,10 +431,6 @@ void MainWindow::on_pushButton_chercher_clicked()
         QMessageBox::information(this, "Aucun résultat", QString("Aucun employé trouvé avec CIN: %1").arg(cin));
     }
 }
-
-
-
-
 
 // Function to validate inputs
 bool MainWindow::validateInputs(int cin, const QString &nom, const QString &prenom,
@@ -435,4 +568,56 @@ void MainWindow::on_pushButton_supprimer_clicked() {
     } else {
         QMessageBox::critical(this, "Erreur", "Erreur lors de la suppression de l'employé.");
     }
+}
+
+
+
+void MainWindow::on_pushButton_27_clicked()
+{
+    Employe e;
+        try{
+        //Crée un graphique (QChart) pour afficher les statistiques.
+            QChart *chart = new QChart();
+            QBarSeries *series = new QBarSeries();
+           /*Crée une instance d'axe de catégorie (QBarCategoryAxis) pour l'axe X.*/
+            QBarCategoryAxis *axis = new QBarCategoryAxis();
+
+            QBarSet *set = new QBarSet(" Point de fidelite");
+            QStringList typesList;
+            QList<QBarSet *> nbrList;
+            std::map<QString , int> list = e.statNbrPerType();
+            for(auto itr = list.begin() ; itr != list.end(); itr++) {
+                typesList.append(itr->first);
+    //            nbrList.append(itr->second);
+                *set << itr->second;
+                nbrList.append(set);
+            }
+            qDebug() << typesList;
+            series->append(set);
+            chart->addSeries(series);
+            chart->setAnimationOptions(QChart::AllAnimations);
+            axis->append(typesList);
+            chart->createDefaultAxes();
+            chart->setAxisX(axis, series);
+            chart->legend()->setAlignment(Qt::AlignBottom);
+            //Crée une vue graphique (QChartView) et active l'anticrénelage pour un rendu plus lisse.
+            QChartView *chartView = new QChartView(chart);
+            chartView->setRenderHint(QPainter::Antialiasing);
+            QPalette pal = qApp->palette();
+            pal.setColor(QPalette::Window, QRgb(0x0d4261));
+            pal.setColor(QPalette::WindowText, QRgb(0x95212c));
+            qApp->setPalette(pal);
+            QFont font;
+            font.setPixelSize(40);
+            chart->setTitleFont(font);
+            chart->setTitleBrush(QBrush(Qt::red));
+            chart->setTitle("statistique Point fidelite PER IDC");
+            chartView->setChart(chart);
+            chartView->showNormal();
+
+
+
+        }catch(...){
+
+}
 }

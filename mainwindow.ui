@@ -395,7 +395,7 @@ border-radius:5px;</string>
       </rect>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>8</number>
      </property>
      <widget class="QWidget" name="page">
       <widget class="QLabel" name="label_2">
@@ -656,9 +656,9 @@ border-radius:10px;</string>
       <widget class="QPushButton" name="pushButton_forgotPassword">
        <property name="geometry">
         <rect>
-         <x>370</x>
+         <x>340</x>
          <y>440</y>
-         <width>161</width>
+         <width>191</width>
          <height>51</height>
         </rect>
        </property>
@@ -766,6 +766,879 @@ border-radius:10px;</string>
         <string>mot de passe oublié ?</string>
        </property>
       </widget>
+     </widget>
+     <widget class="QWidget" name="page_8">
+      <widget class="QLabel" name="label_95">
+       <property name="geometry">
+        <rect>
+         <x>180</x>
+         <y>30</y>
+         <width>281</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(59, 76, 170);</string>
+       </property>
+       <property name="text">
+        <string>Quel employé évaluez-vous ?</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_nomprenom">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>140</y>
+         <width>201</width>
+         <height>26</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_83">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>80</y>
+         <width>201</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Nom de l'employé *
+
+Veuillez indiquer son nom complet</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_96">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>180</y>
+         <width>231</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Évaluation des performances des employés</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_97">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>200</y>
+         <width>361</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Donnez une note de 1 à 5 pour chacune des catégories ci-dessous</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_98">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>220</y>
+         <width>381</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>L'employé a une bonne connaissance des tâches requises par son poste</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_195">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>270</y>
+         <width>241</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>L'employé produit un travail de bonne qualité</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_196">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>320</y>
+         <width>311</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>L'employé a de bonnes compétences en communication</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_295">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>380</y>
+         <width>221</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>L'employé collabore bien avec les autres</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_296">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>440</y>
+         <width>351</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>L'employé a de bonnes compétences en résolution de problèmes</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_297">
+       <property name="geometry">
+        <rect>
+         <x>430</x>
+         <y>90</y>
+         <width>141</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Ajouter un commentaire </string>
+       </property>
+      </widget>
+      <widget class="QPlainTextEdit" name="plainTextEditCommentaire">
+       <property name="geometry">
+        <rect>
+         <x>430</x>
+         <y>120</y>
+         <width>191</width>
+         <height>171</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_13">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>250</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>1</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_14">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>250</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>2</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_15">
+       <property name="geometry">
+        <rect>
+         <x>120</x>
+         <y>250</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>3</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_16">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>250</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>4</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_17">
+       <property name="geometry">
+        <rect>
+         <x>180</x>
+         <y>250</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>5</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_18">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>300</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>4</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_19">
+       <property name="geometry">
+        <rect>
+         <x>120</x>
+         <y>300</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>3</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_20">
+       <property name="geometry">
+        <rect>
+         <x>180</x>
+         <y>300</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>5</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_21">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>300</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>1</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_22">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>300</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>2</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_23">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>350</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>4</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_24">
+       <property name="geometry">
+        <rect>
+         <x>120</x>
+         <y>350</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>3</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_25">
+       <property name="geometry">
+        <rect>
+         <x>180</x>
+         <y>350</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>5</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_26">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>350</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>1</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_27">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>350</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>2</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_28">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>410</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>4</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_29">
+       <property name="geometry">
+        <rect>
+         <x>120</x>
+         <y>410</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>3</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_30">
+       <property name="geometry">
+        <rect>
+         <x>180</x>
+         <y>410</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>5</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_31">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>410</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>1</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_32">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>410</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>2</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_33">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>470</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>4</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_34">
+       <property name="geometry">
+        <rect>
+         <x>120</x>
+         <y>470</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>3</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_35">
+       <property name="geometry">
+        <rect>
+         <x>180</x>
+         <y>470</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>5</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_36">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>470</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>1</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_37">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>470</y>
+         <width>31</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>2</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_298">
+       <property name="geometry">
+        <rect>
+         <x>410</x>
+         <y>310</y>
+         <width>161</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Veuillez confirmer ci-dessous </string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_299">
+       <property name="geometry">
+        <rect>
+         <x>380</x>
+         <y>330</y>
+         <width>241</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>via CAPTCHA que les informations contenues </string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_300">
+       <property name="geometry">
+        <rect>
+         <x>400</x>
+         <y>350</y>
+         <width>211</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>dans ce rapport sont exactes et vraies *</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="captchaLabel">
+       <property name="geometry">
+        <rect>
+         <x>530</x>
+         <y>380</y>
+         <width>49</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="captchaInput">
+       <property name="geometry">
+        <rect>
+         <x>450</x>
+         <y>430</y>
+         <width>113</width>
+         <height>22</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="refreshCaptchaButton">
+       <property name="geometry">
+        <rect>
+         <x>380</x>
+         <y>380</y>
+         <width>131</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Regénérer CAPTCHA</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="validateCaptchaButton">
+       <property name="geometry">
+        <rect>
+         <x>470</x>
+         <y>460</y>
+         <width>75</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Soumettre</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="page_25">
+      <widget class="QLabel" name="label_301">
+       <property name="geometry">
+        <rect>
+         <x>190</x>
+         <y>20</y>
+         <width>201</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(59, 76, 170);</string>
+       </property>
+       <property name="text">
+        <string>Demande d'absence</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_cin3">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>100</y>
+         <width>201</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_302">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>80</y>
+         <width>201</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Veuillez indiquer votre CIN</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_303">
+       <property name="geometry">
+        <rect>
+         <x>320</x>
+         <y>80</y>
+         <width>201</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Veuillez indiquer votre nom complet</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_nomprenom_5">
+       <property name="geometry">
+        <rect>
+         <x>320</x>
+         <y>100</y>
+         <width>201</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_304">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>180</y>
+         <width>81</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Date de début</string>
+       </property>
+      </widget>
+      <widget class="QDateEdit" name="dateEdit_dd">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>200</y>
+         <width>110</width>
+         <height>22</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QDateEdit" name="dateEdit_df">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>200</y>
+         <width>110</width>
+         <height>22</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_305">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>180</y>
+         <width>81</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Date de fin</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_306">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>150</y>
+         <width>81</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Quand ?</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_307">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>150</y>
+         <width>611</width>
+         <height>81</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border: 2px solid #FFD700;  /* Gold border */
+border-radius: 15px;       
+background: qlineargradient(
+    spread: pad, x1:0, y1:0, x2:1, y2:1,
+    stop: 0 #FFD700, stop: 1 #B8860B 
+);
+color: black;              
+font-size: 16px;           
+font-weight: bold;         
+padding: 10px 20px;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_309">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>250</y>
+         <width>611</width>
+         <height>81</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border: 2px solid #FFD700;  /* Gold border */
+border-radius: 15px;       
+background: qlineargradient(
+    spread: pad, x1:0, y1:0, x2:1, y2:1,
+    stop: 0 #FFD700, stop: 1 #B8860B 
+);
+color: black;              
+font-size: 16px;           
+font-weight: bold;         
+padding: 10px 20px;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_308">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>260</y>
+         <width>281</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Quel(s) type(s) d'abscence souhaitez-vous poser ?</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboBox_abs">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>295</y>
+         <width>271</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text">
+         <string>Congés payés
+
+</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Congé maladie
+
+</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Congé maternité/paternité
+
+</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Congé sans solde
+
+</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Congé exceptionnel
+
+</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Retard ou absence imprévue
+
+</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Formation professionnelle
+
+</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Absence pour raisons personnelles
+
+</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Jour férié ou repos hebdomadaire
+
+</string>
+        </property>
+       </item>
+      </widget>
+      <widget class="QPushButton" name="pushButton_envoyer">
+       <property name="geometry">
+        <rect>
+         <x>270</x>
+         <y>360</y>
+         <width>75</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Envoyer</string>
+       </property>
+      </widget>
+      <zorder>label_307</zorder>
+      <zorder>label_301</zorder>
+      <zorder>lineEdit_cin3</zorder>
+      <zorder>label_302</zorder>
+      <zorder>label_303</zorder>
+      <zorder>lineEdit_nomprenom_5</zorder>
+      <zorder>label_304</zorder>
+      <zorder>dateEdit_dd</zorder>
+      <zorder>dateEdit_df</zorder>
+      <zorder>label_305</zorder>
+      <zorder>label_306</zorder>
+      <zorder>label_309</zorder>
+      <zorder>label_308</zorder>
+      <zorder>comboBox_abs</zorder>
+      <zorder>pushButton_envoyer</zorder>
      </widget>
      <widget class="QWidget" name="page_2">
       <widget class="QTabWidget" name="tabWidget_2">

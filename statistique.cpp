@@ -148,3 +148,4 @@ QString Statistique::getAdditionalStatistics() {
 
     return html;
 }
+

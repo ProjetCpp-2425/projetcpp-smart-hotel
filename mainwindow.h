@@ -7,6 +7,12 @@
 #include <QString>
 #include <QSqlQuery>
 #include <QMessageBox>
+#include <QImage>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QRandomGenerator>
+#include <QPainter>
 #include "employe.h"
 
 QT_BEGIN_NAMESPACE
@@ -30,9 +36,18 @@ private slots:
     void on_pushButton_modifier_clicked();
     void on_pushButton_supprimer_clicked();
     void on_pushButton_chercher_clicked();
-    void on_pushButton_pdf_clicked();
     void on_pushButton_statistique_clicked();
     void on_pushButton_trierParSalaire_clicked();
+
+
+    void validateCaptcha();
+    void regenerateCaptcha();
+    void on_pushButton_27_clicked();
+
+    void on_pushButton_envoyer_clicked();
+
+
+
 
 private:
     // Login validation and authentication
@@ -44,6 +59,14 @@ private:
                         const QString &question, const QString &sexe,
                         const QString &poste, float salaire,
                         const QString &mot_de_passe);
+
+    int generatedCaptcha; // Stocker la chaîne CAPTCHA
+
+    int calculerJoursAbsence(const QDate &dateDebut, const QDate &dateFin); // Calcul des jours d'absence
+    void on_pushButton_pdf_clicked();
+
+
+
 
     Ui::MainWindow *ui;       // User interface
     Employe employe;           // Instance of Employe class

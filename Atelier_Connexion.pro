@@ -24,17 +24,24 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++11
 
+QT += charts
+QT += core gui network
+QT       += core gui charts
+
+
 SOURCES += \
     employe.cpp \
         main.cpp \
         mainwindow.cpp \
     connection.cpp \
+    performance.cpp \
     statistique.cpp
 
 HEADERS += \
     employe.h \
         mainwindow.h \
     connection.h \
+    performance.h \
     statistique.h
 
 FORMS += \
