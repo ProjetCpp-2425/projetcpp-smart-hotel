@@ -1,35 +1,46 @@
 #ifndef SERVICE_H
 #define SERVICE_H
-#include<QString>
-#include<QSqlQuery>
-#include<QSqlQueryModel>
 
+#include <QString>
+#include <QSqlQuery>
+#include <QSqlQueryModel>
+#include <QDate>
 
-class Service
-{
-    int id_service;
-    QString nom_service;
-    QString statut_service;
-    float tarif;
-
+class Service {
 public:
-    Service() {}
-    Service(int, QString, QString, float);
+    Service();
+    Service(int id_service, const QString &service_demande, int numero, const QDate &datee, float tarif);
 
-    int getIdService() { return id_service; }
-    QString getNomService() { return nom_service; }
-    QString getStatutService() { return statut_service; }
-    float getTarif() { return tarif; }
-
-    void setIdService(int id) { id_service = id; }
-    void setNomService(QString nom) { nom_service = nom; }
-    void setStatutService(QString statut) { statut_service = statut; }
-    void setTarif(float tarif) { this->tarif = tarif; }
-
+    // CRUD Operations
     bool ajouter();
-    bool modifier(int id_service, QString nom_service, QString statut_service, float tarif);
-    bool supprimer(int);
-};
+    bool supprimer(int id_service);
+    bool modifier(int id_service, const QString &service_demande, int numero, const QDate &datee, float tarif);
 
+    QSqlQueryModel *afficher();
+    QSqlQueryModel *rechercher(const QString &critere);
+
+    // Getters and Setters
+    int getIdService() const;
+    void setIdService(int id_service);
+
+    QString getServiceDemande() const;
+    void setServiceDemande(const QString &service_demande);
+
+    int getNumero() const;
+    void setNumero(int numero);
+
+    QDate getDatee() const;
+    void setDatee(const QDate &datee);
+
+    float getTarif() const;
+    void setTarif(float tarif);
+
+private:
+    int id_service;
+    QString service_demande;
+    int numero;
+    QDate datee;
+    float tarif;
+};
 
 #endif // SERVICE_H

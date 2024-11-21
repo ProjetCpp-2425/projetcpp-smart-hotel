@@ -6,6 +6,11 @@
 
 
 QT +=sql
+QT += core gui network
+QT += core network
+
+
+
 
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -27,15 +32,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-    cleaning.cpp \
         main.cpp \
         mainwindow.cpp \
-    connection.cpp
+    connection.cpp \
+    service.cpp
 
 HEADERS += \
-    cleaning.h \
         mainwindow.h \
-    connection.h
+    connection.h \
+    service.h
 
 FORMS += \
         mainwindow.ui
