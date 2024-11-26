@@ -18,6 +18,7 @@
 #include <QBarSet>
 #include <QtCharts>
 
+
 GestionReservation::GestionReservation(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::GestionReservation)
@@ -26,6 +27,28 @@ GestionReservation::GestionReservation(QWidget *parent)
 
     ui->tableView_reservation->setModel(this->reservation.afficher());
     ui->tableView_reservation->resizeColumnsToContents();
+
+    connect(ui->tabWidget_2, &QTabWidget::currentChanged, this, &GestionReservation::onTabChanged);
+    connect(ui->comboBox_stat, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &GestionReservation::updateChart);
+    connect(ui->comboBox_tri, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &GestionReservation::TriChanged);
+
+    connect(ui->tabWidget_2, &QTabWidget::currentChanged, this, &GestionReservation::updateCalendrier);
+
+    updateCalendrier();
+
+    connect(ui->calendarWidget, &QCalendarWidget::clicked, this, &GestionReservation::onDateSelected);
+
+    //connect(ui->pushButton_vocal, &QPushButton::clicked, this, &GestionReservation::on_pushButton_vocal_clicked);
+
+    int ret=A.connect_arduino(); // lancer la connexion à arduino
+    switch(ret){
+        case(0):qDebug()<< "arduino is available and connected to : "<< A.getarduino_port_name();
+            break;
+        case(1):qDebug() << "arduino is available but not connected to :" <<A.getarduino_port_name();
+           break;
+        case(-1):qDebug() << "arduino is not available";
+    }
+
 
 }
 
@@ -103,6 +126,7 @@ void GestionReservation::on_pushButton_ajouter_clicked()
         ui->dateEdit_depart->setDate(QDate::currentDate().addDays(1));
         ui->comboBox_type->setCurrentIndex(0);
         ui->comboBox_status->setCurrentIndex(0);
+        updateCalendrier();
     }
 }
 
@@ -116,6 +140,8 @@ void GestionReservation::on_pushButton_19_clicked()
             QMessageBox::information(this, "Succès", "La réservation a été supprimée avec succès.");
             ui->tableView_reservation->setModel(this->reservation.afficher());
             ui->tableView_reservation->resizeColumnsToContents();
+            updateCalendrier();
+
         } else {
             QMessageBox::critical(this, "Erreur de suppression", "Échec de la suppression de la réservation. ");
         }
@@ -238,6 +264,8 @@ void GestionReservation::on_pushButton_modifier_clicked()
         ui->dateEdit_depart_2->setDate(QDate::currentDate().addDays(1));
         ui->comboBox_type_2->setCurrentIndex(0);
         ui->comboBox_status_2->setCurrentIndex(0);
+        updateCalendrier();
+
     } else {
         QMessageBox::critical(this, "Erreur", "Échec de la modification de la réservation. Vérifiez si le CIN existe dans la table clients.");
     }
@@ -247,92 +275,102 @@ void GestionReservation::on_pushButton_modifier_clicked()
 
 void GestionReservation::on_pushButton_pdf_clicked()
 {
-    // Initialize an HTML string to build the content
-        QString htmlContent;
+    // Get the reservation number from lineEdit_goto_confirmation
+    QString numReservationText = ui->lineEdit_goto_confirmation->text();
+    if (numReservationText.isEmpty()) {
+        QMessageBox::warning(this, "Input Error", "Please enter a reservation number.");
+        return;
+    }
 
-        // Open a dialog for the user to select the save location
-        QString pdfFilePath = QFileDialog::getSaveFileName(
-            this, tr("Save PDF"), "", "*.pdf");
-        if (QFileInfo(pdfFilePath).suffix().isEmpty()) {
-            pdfFilePath.append(".pdf");
-        }
+    int numReservation = numReservationText.toInt();
+    QSqlQuery query;
 
-        // Configure the printer for PDF output
-        QPrinter pdfPrinter(QPrinter::HighResolution);
-        pdfPrinter.setOutputFormat(QPrinter::PdfFormat);
-        pdfPrinter.setOutputFileName(pdfFilePath);
+    // Query to fetch reservation data
+    query.prepare("SELECT DATE_ARRIVEE, DATE_DEPART, TYPE, STATUT_RESERVATION, MONTANT, CIN "
+                  "FROM RESERVATION WHERE NUM_RESERVATION = :num_reservation");
+    query.bindValue(":num_reservation", numReservation);
 
-        // Use QPageLayout to set the paper size to A4
-        QPageLayout pageLayout;
-        pageLayout.setPageSize(QPageSize(QPageSize::A4));
-        pdfPrinter.setPageLayout(pageLayout);
+    if (!query.exec() || !query.next()) {
+        QMessageBox::warning(this, "Not Found", "No reservation found with the specified number.");
+        return;
+    }
 
-        // Access data from tableView_reservation
-        QAbstractItemModel* model = ui->tableView_reservation->model();
-        int totalRows = model->rowCount();
-        int totalColumns = model->columnCount();
+    // Fetch data from query
+    QString dateArrivee = query.value("DATE_ARRIVEE").toString();
+    QString dateDepart = query.value("DATE_DEPART").toString();
+    QString type = query.value("TYPE").toString();
+    QString statutReservation = query.value("STATUT_RESERVATION").toString();
+    QString montant = query.value("MONTANT").toString();
+    QString cin = query.value("CIN").toString();
 
-        // Get today's date
-        QString todayDate = QDate::currentDate().toString("dd/MM/yyyy");
+    // Open a dialog for the user to select the save location
+    QString pdfFilePath = QFileDialog::getSaveFileName(
+        this, tr("Save PDF"), "", "*.pdf");
+    if (QFileInfo(pdfFilePath).suffix().isEmpty()) {
+        pdfFilePath.append(".pdf");
+    }
 
-        // Start building the HTML content
-        htmlContent += "<html><head>"
-                       "<meta charset='UTF-8'>"
-                       "<title>Reservation Report</title>"
-                       "<style>"
-                       "body { font-family: Verdana; margin: 25px; }"
-                       ".header { font-size: 18px; margin-bottom: 15px; }"
-                       ".title { text-align: center; }"
-                       ".title h1 { margin-bottom: 10px; }"
-                       ".title h4 { margin-top: 0; }"
-                       "table { width: 100%; border-collapse: collapse; margin-top: 20px; }"
-                       "th, td { border: 1px solid #333; padding: 10px; }"
-                       "th { background-color: #f0f0f0; }"
-                       "</style>"
-                       "</head><body>";
+    // Configure the printer for PDF output
+    QPrinter pdfPrinter(QPrinter::HighResolution);
+    pdfPrinter.setOutputFormat(QPrinter::PdfFormat);
+    pdfPrinter.setOutputFileName(pdfFilePath);
 
-        // Header section
-        htmlContent += "<div class='header'>Welcome to PharmaFLOW</div>";
+    // Use QPageLayout to set the paper size to A4
+    QPageLayout pageLayout;
+    pageLayout.setPageSize(QPageSize(QPageSize::A4));
+    pdfPrinter.setPageLayout(pageLayout);
 
-        // Title section
-        htmlContent += "<div class='title'><h1>Reservation List</h1>"
-                       "<h4>Date: " + todayDate + "</h4></div>";
+    // Get today's date
+    QString todayDate = QDate::currentDate().toString("dd/MM/yyyy");
 
-        // Begin table
-        htmlContent += "<table><thead><tr>";
+    // Start building the HTML content as a receipt with larger font sizes
+    QString htmlContent;
+    htmlContent += "<html><head>"
+                   "<meta charset='UTF-8'>"
+                   "<title>Reservation Receipt</title>"
+                   "<style>"
+                   "body { font-family: Verdana; margin: 25px; font-size: 14pt; }"
+                   ".header { font-size: 20pt; font-weight: bold; text-align: center; margin-bottom: 20px; }"
+                   ".info { font-size: 16pt; margin-top: 20px; }"
+                   ".info p { margin: 10px 0; }"
+                   ".footer { font-size: 14pt; text-align: center; margin-top: 30px; color: #555; }"
+                   "</style>"
+                   "</head><body>";
 
-        // Add table headers
-        for (int col = 0; col < totalColumns; ++col) {
-            if (!ui->tableView_reservation->isColumnHidden(col)) {
-                QString headerText = model->headerData(col, Qt::Horizontal).toString();
-                htmlContent += "<th>" + headerText + "</th>";
-            }
-        }
-        htmlContent += "</tr></thead><tbody>";
+    // Header section
+    htmlContent += "<div class='header'>Reservation Receipt</div>";
 
-        // Populate table rows
-        for (int row = 0; row < totalRows; ++row) {
-            htmlContent += "<tr>";
-            for (int col = 0; col < totalColumns; ++col) {
-                if (!ui->tableView_reservation->isColumnHidden(col)) {
-                    QModelIndex index = model->index(row, col);
-                    QString cellData = model->data(index).toString().simplified();
-                    htmlContent += "<td>" + (cellData.isEmpty() ? "&nbsp;" : cellData) + "</td>";
-                }
-            }
-            htmlContent += "</tr>";
-        }
+    // Date and Reservation Number
+    htmlContent += "<div class='info'><p><strong>Date:</strong> " + todayDate + "</p>"
+                   "<p><strong>Reservation Number:</strong> " + numReservationText + "</p></div>";
 
-        // Close table and HTML tags
-        htmlContent += "</tbody></table></body></html>";
+    // Reservation Details
+    htmlContent += "<div class='info'><h3>Reservation Details</h3>"
+                   "<p><strong>CIN:</strong> " + cin + "</p>"
+                   "<p><strong>Arrival Date:</strong> " + dateArrivee + "</p>"
+                   "<p><strong>Departure Date:</strong> " + dateDepart + "</p>"
+                   "<p><strong>Type:</strong> " + type + "</p>"
+                   "<p><strong>Status:</strong> " + statutReservation + "</p>"
+                   "<p><strong>Amount:</strong> $" + montant + "</p></div>";
 
-        // Create a document to render the HTML content
-        QTextDocument document;
-        document.setHtml(htmlContent);
 
-        // Print the document to the specified PDF file
-        document.print(&pdfPrinter);
+    // Footer section
+    htmlContent += "<div class='footer'>Thank you for choosing checkinn. We hope to see you again!</div>";
+
+    // Close HTML tags
+    htmlContent += "</body></html>";
+
+    // Create a document to render the HTML content
+    QTextDocument document;
+    document.setHtml(htmlContent);
+
+    // Print the document to the specified PDF file
+    document.print(&pdfPrinter);
+
 }
+
+
+
 
 void GestionReservation::on_pushButton_recherchers_clicked()
 {
@@ -342,133 +380,332 @@ void GestionReservation::on_pushButton_recherchers_clicked()
     ui->tableView_reservation->resizeColumnsToContents();
 }
 
-void GestionReservation::on_pushButton_27_clicked()
+
+
+void GestionReservation::onTabChanged(int index)
 {
-    QString selectedStat = ui->comboBox_stat->currentText();
-
-        if (selectedStat == "Type Reservation")
-        {
-            // Pie chart logic
-            QPieSeries *series = new QPieSeries();
-            QSqlQuery query;
-            query.prepare("SELECT TYPE, COUNT(*) FROM RESERVATION GROUP BY TYPE");
-            query.exec();
-
-            int totalReservations = 0;
-            QHash<QString, int> typeCounts;
-
-            while (query.next())
-            {
-                QString type = query.value(0).toString();
-                int nombreReservations = query.value(1).toInt();
-                totalReservations += nombreReservations;
-                typeCounts.insert(type, nombreReservations);
-            }
-
-            for (auto it = typeCounts.constBegin(); it != typeCounts.constEnd(); ++it)
-            {
-                QString type = it.key();
-                int nombreReservations = it.value();
-                double percentage = (nombreReservations * 100.0) / totalReservations;
-                QPieSlice *slice = series->append(type, nombreReservations);
-                slice->setLabel(QString("%1\n%2%").arg(type).arg(percentage, 0, 'f', 1));
-            }
-
-            QChart *chart = new QChart();
-            chart->addSeries(series);
-            chart->setTitle("Statistiques - Répartition des réservations par type");
-            series->setLabelsVisible();
-            QChartView *chartView = new QChartView(chart);
-            chartView->setRenderHint(QPainter::Antialiasing);
-            chartView->resize(1280, 720);
-            chartView->show();
-        }
-        else if (selectedStat == "Montant Reservation")
-        {
-            // Bar chart logic with ranges
-            QBarSeries *series = new QBarSeries();
-            QBarSet *set = new QBarSet("Réservations");
-            QSqlQuery query;
-            query.prepare("SELECT MONTANT FROM RESERVATION");
-            query.exec();
-
-            int count0_250 = 0;
-            int count250_750 = 0;
-            int countAbove750 = 0;
-
-            while (query.next())
-            {
-                int montant = query.value(0).toInt();
-                if (montant <= 250)
-                    count0_250++;
-                else if (montant <= 750)
-                    count250_750++;
-                else
-                    countAbove750++;
-            }
-
-            *set << count0_250 << count250_750 << countAbove750;
-
-            series->append(set);
-
-            QChart *chart = new QChart();
-            chart->addSeries(series);
-            chart->setTitle("Statistiques - Répartition des réservations par tranches de montant");
-            chart->setAnimationOptions(QChart::SeriesAnimations);
-
-            QBarCategoryAxis *axisX = new QBarCategoryAxis();
-            axisX->append(QStringList() << "0-250" << "250-750" << ">750");
-            chart->addAxis(axisX, Qt::AlignBottom);
-            series->attachAxis(axisX);
-
-            QValueAxis *axisY = new QValueAxis();
-            axisY->setTitleText("Nombre de réservations");
-            chart->addAxis(axisY, Qt::AlignLeft);
-            series->attachAxis(axisY);
-
-            QChartView *chartView = new QChartView(chart);
-            chartView->setRenderHint(QPainter::Antialiasing);
-            chartView->resize(1280, 720);
-            chartView->show();
-        }
-        else if (selectedStat == "Status Reservation")
-        {
-            // Line chart logic
-            QLineSeries *series = new QLineSeries();
-            QSqlQuery query;
-            query.prepare("SELECT STATUT_RESERVATION, COUNT(*) FROM RESERVATION GROUP BY STATUT_RESERVATION");
-            query.exec();
-
-            int index = 0;
-            while (query.next())
-            {
-                QString status = query.value(0).toString();
-                int count = query.value(1).toInt();
-                series->append(index, count);
-                series->setName(status);
-                index++;
-            }
-
-            QChart *chart = new QChart();
-            chart->addSeries(series);
-            chart->setTitle("Statistiques - Répartition des réservations par statut");
-            chart->createDefaultAxes();
-
-            // Access the X and Y axes using QChart::axes()
-            auto axesX = chart->axes(Qt::Horizontal);
-            auto axesY = chart->axes(Qt::Vertical);
-
-            // Set titles for the axes, if they exist
-            if (!axesX.isEmpty()) {
-                axesX.first()->setTitleText("Statut");
-            }
-            if (!axesY.isEmpty()) {
-                axesY.first()->setTitleText("Nombre de réservations");
-            }
-
-            QChartView *chartView = new QChartView(chart);
-            chartView->setRenderHint(QPainter::Antialiasing);
-            chartView->resize(1280, 720);
-            chartView->show();
-        }
+    // Check if the currently selected tab is tab_4
+    if (ui->tabWidget_2->widget(index) == ui->tab_4) {
+        updateChart();
+    }
 }
+
+void GestionReservation::updateChart()
+{
+    // Clear any existing chart to avoid duplicates
+    if (ui->verticalLayout_stat->count() > 0) {
+        QLayoutItem *item = ui->verticalLayout_stat->takeAt(0);
+        delete item->widget();
+        delete item;
+    }
+
+    QString selectedStat = ui->comboBox_stat->currentText();
+    QChart *chart = new QChart();
+    QChartView *chartView = new QChartView(chart);
+    chartView->setRenderHint(QPainter::Antialiasing);
+
+    if (selectedStat == "Type Reservation")
+    {
+        // Pie chart logic
+        QPieSeries *series = new QPieSeries();
+        QSqlQuery query;
+        query.prepare("SELECT TYPE, COUNT(*) FROM RESERVATION GROUP BY TYPE");
+        query.exec();
+
+        int totalReservations = 0;
+        QHash<QString, int> typeCounts;
+
+        while (query.next())
+        {
+            QString type = query.value(0).toString();
+            int nombreReservations = query.value(1).toInt();
+            totalReservations += nombreReservations;
+            typeCounts.insert(type, nombreReservations);
+        }
+
+        for (auto it = typeCounts.constBegin(); it != typeCounts.constEnd(); ++it)
+        {
+            QString type = it.key();
+            int nombreReservations = it.value();
+            double percentage = (nombreReservations * 100.0) / totalReservations;
+            QPieSlice *slice = series->append(type, nombreReservations);
+            slice->setLabel(QString("%1\n%2%").arg(type).arg(percentage, 0, 'f', 1));
+        }
+
+        chart->addSeries(series);
+        chart->setTitle("Statistiques - Répartition des réservations par type");
+        series->setLabelsVisible();
+    }
+    else if (selectedStat == "Montant Reservation")
+    {
+        // Bar chart logic with ranges
+        QBarSeries *series = new QBarSeries();
+        QBarSet *set = new QBarSet("Réservations");
+        QSqlQuery query;
+        query.prepare("SELECT MONTANT FROM RESERVATION");
+        query.exec();
+
+        int count0_250 = 0;
+        int count250_750 = 0;
+        int countAbove750 = 0;
+
+        while (query.next())
+        {
+            int montant = query.value(0).toInt();
+            if (montant <= 250)
+                count0_250++;
+            else if (montant <= 750)
+                count250_750++;
+            else
+                countAbove750++;
+        }
+
+        *set << count0_250 << count250_750 << countAbove750;
+        series->append(set);
+
+        chart->addSeries(series);
+        chart->setTitle("Statistiques - Répartition des réservations par tranches de montant");
+        chart->setAnimationOptions(QChart::SeriesAnimations);
+
+        QBarCategoryAxis *axisX = new QBarCategoryAxis();
+        axisX->append(QStringList() << "0-250" << "250-750" << ">750");
+        chart->addAxis(axisX, Qt::AlignBottom);
+        series->attachAxis(axisX);
+
+        QValueAxis *axisY = new QValueAxis();
+        axisY->setTitleText("Nombre de réservations");
+        chart->addAxis(axisY, Qt::AlignLeft);
+        series->attachAxis(axisY);
+    }
+    else if (selectedStat == "Status Reservation")
+    {
+        // Line chart logic
+        QLineSeries *series = new QLineSeries();
+        QSqlQuery query;
+        query.prepare("SELECT STATUT_RESERVATION, COUNT(*) FROM RESERVATION GROUP BY STATUT_RESERVATION");
+        query.exec();
+
+        int index = 0;
+        while (query.next())
+        {
+            QString status = query.value(0).toString();
+            int count = query.value(1).toInt();
+            series->append(index, count);
+            series->setName(status);
+            index++;
+        }
+
+        chart->addSeries(series);
+        chart->setTitle("Statistiques - Répartition des réservations par statut");
+        chart->createDefaultAxes();
+
+        // Set axis titles using the appropriate axes
+        if (!chart->axes(Qt::Horizontal).isEmpty()) {
+            chart->axes(Qt::Horizontal).first()->setTitleText("Statut");
+        }
+        if (!chart->axes(Qt::Vertical).isEmpty()) {
+            chart->axes(Qt::Vertical).first()->setTitleText("Nombre de réservations");
+        }
+    }
+
+    // Add the chart view to the layout
+    ui->verticalLayout_stat->addWidget(chartView);
+}
+
+void GestionReservation::on_pushButton_goto_confirmation_clicked()
+{
+    QString numReservationText = ui->lineEdit_goto_confirmation->text();
+
+       if (numReservationText.isEmpty()) {
+           QMessageBox::warning(this, "Input Error", "Please enter a reservation number.");
+           return;
+       }
+
+       int numReservation = numReservationText.toInt();
+       QSqlQuery query;
+
+       // Prepare the query to fetch data from RESERVATION table based on NUM_RESERVATION
+       query.prepare("SELECT DATE_ARRIVEE, DATE_DEPART, TYPE, STATUT_RESERVATION, MONTANT, CIN "
+                     "FROM RESERVATION WHERE NUM_RESERVATION = :num_reservation");
+       query.bindValue(":num_reservation", numReservation);
+
+       // Execute the query
+       if (query.exec() && query.next()) {
+           // Set data to the respective line edits if the reservation is found
+           ui->lineEdit_dateArrive_2->setText(query.value("DATE_ARRIVEE").toString());
+           ui->lineEdit_dateDepart_2->setText(query.value("DATE_DEPART").toString());
+           ui->lineEdit_Type_2->setText(query.value("TYPE").toString());
+           ui->lineEdit_Status_2->setText(query.value("STATUT_RESERVATION").toString());
+           ui->lineEdit_Montant_2->setText(query.value("MONTANT").toString());
+           ui->lineEdit_Cin_2->setText(query.value("CIN").toString());
+
+           ui->tabWidget_2->setCurrentWidget(ui->tab_5);
+
+       } else {
+           // Display an error message if the reservation is not found
+           QMessageBox::warning(this, "Not Found", "No reservation found with the specified number.");
+       }
+}
+
+#include <QTextCharFormat>
+
+void GestionReservation::updateCalendrier() {
+    // Reset all date formats to the default
+    QTextCharFormat defaultFormat;
+    defaultFormat.setBackground(Qt::white); // Default background color
+    QDate today = QDate::currentDate();
+
+    // Loop through all dates currently visible on the calendar
+    for (int year = today.year() - 1; year <= today.year() + 1; ++year) {
+        for (int month = 1; month <= 12; ++month) {
+            for (int day = 1; day <= QDate(year, month, 1).daysInMonth(); ++day) {
+                QDate date(year, month, day);
+                if (date.isValid()) {
+                    ui->calendarWidget->setDateTextFormat(date, defaultFormat);
+                }
+            }
+        }
+    }
+
+    // Query the database to get reservation data
+    QSqlQuery query;
+    query.prepare("SELECT DATE_ARRIVEE, STATUT_RESERVATION FROM RESERVATION");
+
+    if (!query.exec()) {
+        qDebug() << "Error fetching reservation data:" << query.lastError().text();
+        return;
+    }
+
+    // Apply custom formats for reservation dates
+    while (query.next()) {
+        QDate dateArrivee = query.value("DATE_ARRIVEE").toDate();
+        QString statut = query.value("STATUT_RESERVATION").toString();
+
+        QTextCharFormat format;
+        if (statut == "confirmer") {
+            format.setBackground(Qt::green);  // Green for "confirmer"
+        } else if (statut == "annuler") {
+            format.setBackground(Qt::red);  // Red for "annuler"
+        }
+
+        // Apply the formatting to the calendar widget
+        ui->calendarWidget->setDateTextFormat(dateArrivee, format);
+    }
+}
+
+
+void GestionReservation::onDateSelected(const QDate &date)
+{
+    QSqlQuery query;
+    query.prepare(
+        "SELECT NUM_RESERVATION, DATE_ARRIVEE, DATE_DEPART, STATUT_RESERVATION, MONTANT, CIN, TYPE "
+        "FROM RESERVATION WHERE DATE_ARRIVEE = TO_DATE(:date, 'YYYY-MM-DD')"
+    );
+    query.bindValue(":date", date.toString("yyyy-MM-dd"));
+
+    if (!query.exec()) {
+        qDebug() << "Erreur lors de la récupération des données des réservations :" << query.lastError().text();
+        return;
+    }
+
+    QString message;
+    while (query.next()) {
+        QString numReservation = query.value("NUM_RESERVATION").toString();
+        QString dateArrivee = query.value("DATE_ARRIVEE").toString();
+        QString dateDepart = query.value("DATE_DEPART").toString();
+        QString statut = query.value("STATUT_RESERVATION").toString();
+        QString montant = query.value("MONTANT").toString();
+        QString cin = query.value("CIN").toString();
+        QString type = query.value("TYPE").toString();
+
+        message += QString(
+            "Réservation #%1\n"
+            "Date d'arrivée : %2\n"
+            "Date de départ : %3\n"
+            "Statut : %4\n"
+            "Montant : %5\n"
+            "CIN : %6\n"
+            "Type : %7\n\n"
+        ).arg(numReservation, dateArrivee, dateDepart, statut, montant, cin, type);
+    }
+
+    if (!message.isEmpty()) {
+        QMessageBox::information(this, "Réservations pour " + date.toString("dd/MM/yyyy"), message);
+    } else {
+        QMessageBox::information(this, "Aucune réservation", "Il n'y a pas de réservations pour la date sélectionnée.");
+    }
+}
+
+
+
+/*void GestionReservation::readReservationData(int id)
+{
+    qDebug() << "The on_pushButton_vocal_clicked function has been triggered.";
+
+    QSqlQuery query;
+    query.prepare("SELECT * FROM RESERVATION WHERE NUM_RESERVATION = :id");
+    query.bindValue(":id", id);
+
+    if (query.exec()) {
+        if (query.next()) {
+            QString dateArrivee = query.value("DATE_ARRIVEE").toString();
+            QString dateDepart = query.value("DATE_DEPART").toString();
+            QString statut = query.value("STATUT_RESERVATION").toString();
+            double montant = query.value("MONTANT").toDouble();
+            QString cin = query.value("CIN").toString();
+            QString type = query.value("TYPE").toString();
+
+            QString textToSpeak = "Bonjour, je vous appelle concernant votre réservation. Voici les détails : ";
+            textToSpeak += "Votre réservation porte le numéro " + QString::number(id) + ". ";
+            textToSpeak += "Votre date d'arrivée est prévue pour le " + dateArrivee + ", et vous quitterez l'établissement le " + dateDepart + ". ";
+            textToSpeak += "Le statut actuel de votre réservation est : " + statut + ". ";
+            textToSpeak += "Le montant total à régler est de " + QString::number(montant, 'f', 2) + " euros. ";
+            textToSpeak += "Votre CIN enregistré est " + cin + ". ";
+            textToSpeak += "Le type de réservation sélectionné est : " + type + ". ";
+            textToSpeak += "Si vous avez des questions ou souhaitez apporter des modifications, n'hésitez pas à nous contacter. Merci et excellente journée !";
+
+            QTextToSpeech *speech = new QTextToSpeech(this);
+            QStringList engines = speech->availableEngines();
+
+            if (engines.isEmpty()) {
+                qDebug() << "No available TTS engines!";
+                QMessageBox::critical(nullptr, QObject::tr("Erreur TTS"),
+                                      QObject::tr("Aucun moteur de synthèse vocale disponible. Veuillez installer un moteur TTS."),
+                                      QMessageBox::Ok);
+                return;
+            } else {
+                qDebug() << "Using TTS engine:" << engines.first();
+            }
+
+            speech->say(textToSpeak);
+        } else {
+            QMessageBox::warning(nullptr, QObject::tr("Aucune réservation"),
+                                 QObject::tr("Aucune réservation trouvée pour l'identifiant spécifié.\n"
+                                             "Veuillez vérifier l'ID et réessayer."), QMessageBox::Ok);
+        }
+    } else {
+        QMessageBox::critical(nullptr, QObject::tr("Erreur de réservation"),
+                              QObject::tr("Une erreur s'est produite lors de la récupération des détails de la réservation.\n"
+                                          "Erreur : %1").arg(query.lastError().text()), QMessageBox::Ok);
+    }
+}
+*/
+
+/*void GestionReservation::on_pushButton_vocal_clicked()
+{
+    // Show a message box to indicate the function is running
+    QMessageBox::information(this, "Function Triggered", "The function on_pushButton_vocal_clicked has been called.");
+
+    int id = ui->lineEdit_vocal->text().toInt();
+    readReservationData(id);
+}*/
+
+
+void GestionReservation::TriChanged()
+{
+    QString critere = ui->comboBox_tri->currentText();
+
+    ui->tableView_reservation->setModel(this->reservation.afficherAvecTri(critere));
+    ui->tableView_reservation->resizeColumnsToContents();
+}
+

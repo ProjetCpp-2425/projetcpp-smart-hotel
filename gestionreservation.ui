@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>792</width>
-    <height>586</height>
+    <width>797</width>
+    <height>585</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -560,44 +560,10 @@ border-radius:5px;</string>
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
          </property>
-         <widget class="QPushButton" name="pushButton_pdf">
-          <property name="geometry">
-           <rect>
-            <x>490</x>
-            <y>10</y>
-            <width>93</width>
-            <height>29</height>
-           </rect>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">background-color: rgb(156, 124, 56);
-border-radius:5px;</string>
-          </property>
-          <property name="text">
-           <string>PDF</string>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="pushButton_27">
-          <property name="geometry">
-           <rect>
-            <x>390</x>
-            <y>10</y>
-            <width>93</width>
-            <height>29</height>
-           </rect>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">background-color: rgb(156, 124, 56);
-border-radius:5px;</string>
-          </property>
-          <property name="text">
-           <string>statistique</string>
-          </property>
-         </widget>
          <widget class="QLineEdit" name="lineEdit_rechercher">
           <property name="geometry">
            <rect>
-            <x>10</x>
+            <x>0</x>
             <y>10</y>
             <width>113</width>
             <height>26</height>
@@ -607,7 +573,7 @@ border-radius:5px;</string>
          <widget class="QPushButton" name="pushButton_recherchers">
           <property name="geometry">
            <rect>
-            <x>130</x>
+            <x>120</x>
             <y>10</y>
             <width>93</width>
             <height>29</height>
@@ -621,28 +587,65 @@ border-radius:5px;</string>
            <string>Recherche</string>
           </property>
          </widget>
-         <widget class="QComboBox" name="comboBox_stat">
+         <widget class="QPushButton" name="pushButton_goto_confirmation">
           <property name="geometry">
            <rect>
-            <x>270</x>
+            <x>490</x>
             <y>10</y>
-            <width>111</width>
+            <width>93</width>
+            <height>29</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(156, 124, 56);
+border-radius:5px;</string>
+          </property>
+          <property name="text">
+           <string>pdf</string>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit_goto_confirmation">
+          <property name="geometry">
+           <rect>
+            <x>432</x>
+            <y>10</y>
+            <width>51</width>
             <height>26</height>
+           </rect>
+          </property>
+         </widget>
+         <widget class="QComboBox" name="comboBox_tri">
+          <property name="geometry">
+           <rect>
+            <x>241</x>
+            <y>10</y>
+            <width>151</width>
+            <height>28</height>
            </rect>
           </property>
           <item>
            <property name="text">
-            <string>Type Reservation</string>
+            <string>Tri par Defaut</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Montant Reservation</string>
+            <string>NumReservationASC</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Status Reservation</string>
+            <string>NumReservationDESC</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>DateReservationASC</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>DateReservationDESC</string>
            </property>
           </item>
          </widget>
@@ -680,7 +683,7 @@ border-radius:5px;</string>
           </rect>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="tab_19">
           <attribute name="title">
@@ -784,12 +787,12 @@ border-radius:5px;</string>
             </property>
             <item>
              <property name="text">
-              <string>confirmé</string>
+              <string>confirmer</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>annulé</string>
+              <string>annuler</string>
              </property>
             </item>
            </widget>
@@ -1159,25 +1162,6 @@ border-radius:5px;</string>
         <attribute name="title">
          <string>Statistique</string>
         </attribute>
-        <widget class="QLabel" name="label_26">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>-10</y>
-           <width>631</width>
-           <height>451</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap>../QtDesignStudio/1.png</pixmap>
-         </property>
-         <property name="scaledContents">
-          <bool>true</bool>
-         </property>
-        </widget>
         <widget class="QLabel" name="label_27">
          <property name="geometry">
           <rect>
@@ -1188,8 +1172,44 @@ border-radius:5px;</string>
           </rect>
          </property>
          <property name="text">
-          <string>Taux de réservation par saison</string>
+          <string/>
          </property>
+        </widget>
+        <widget class="QWidget" name="verticalLayoutWidget">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>60</y>
+           <width>471</width>
+           <height>371</height>
+          </rect>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_stat"/>
+        </widget>
+        <widget class="QComboBox" name="comboBox_stat">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>10</y>
+           <width>181</width>
+           <height>26</height>
+          </rect>
+         </property>
+         <item>
+          <property name="text">
+           <string>Type Reservation</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Montant Reservation</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Status Reservation</string>
+          </property>
+         </item>
         </widget>
        </widget>
        <widget class="QWidget" name="tab_5">
@@ -1209,11 +1229,11 @@ border-radius:5px;</string>
           <string>Confirmation de réservation</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="pushButton_20">
+        <widget class="QPushButton" name="pushButton_pdf">
          <property name="geometry">
           <rect>
-           <x>530</x>
-           <y>440</y>
+           <x>500</x>
+           <y>430</y>
            <width>93</width>
            <height>29</height>
           </rect>
@@ -1226,23 +1246,212 @@ border-radius:5px;</string>
           <string>Imprimer</string>
          </property>
         </widget>
-        <widget class="QLabel" name="label_29">
+        <widget class="QLineEdit" name="lineEdit_Montant_2">
          <property name="geometry">
           <rect>
-           <x>-10</x>
-           <y>-10</y>
-           <width>641</width>
-           <height>431</height>
+           <x>200</x>
+           <y>70</y>
+           <width>113</width>
+           <height>26</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_26">
+         <property name="geometry">
+          <rect>
+           <x>40</x>
+           <y>70</y>
+           <width>81</width>
+           <height>20</height>
           </rect>
          </property>
          <property name="text">
-          <string/>
+          <string>Montant</string>
          </property>
-         <property name="pixmap">
-          <pixmap>../QtDesignStudio/2.png</pixmap>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_Type_2">
+         <property name="geometry">
+          <rect>
+           <x>200</x>
+           <y>110</y>
+           <width>113</width>
+           <height>26</height>
+          </rect>
          </property>
-         <property name="scaledContents">
-          <bool>true</bool>
+        </widget>
+        <widget class="QLabel" name="label_29">
+         <property name="geometry">
+          <rect>
+           <x>40</x>
+           <y>110</y>
+           <width>81</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Type</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_Status_2">
+         <property name="geometry">
+          <rect>
+           <x>200</x>
+           <y>150</y>
+           <width>113</width>
+           <height>26</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_100">
+         <property name="geometry">
+          <rect>
+           <x>40</x>
+           <y>150</y>
+           <width>81</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Status</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_101">
+         <property name="geometry">
+          <rect>
+           <x>40</x>
+           <y>190</y>
+           <width>81</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Date d'arrivée</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_dateArrive_2">
+         <property name="geometry">
+          <rect>
+           <x>200</x>
+           <y>190</y>
+           <width>113</width>
+           <height>26</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_102">
+         <property name="geometry">
+          <rect>
+           <x>40</x>
+           <y>230</y>
+           <width>81</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Date de départ</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_dateDepart_2">
+         <property name="geometry">
+          <rect>
+           <x>200</x>
+           <y>230</y>
+           <width>113</width>
+           <height>26</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_103">
+         <property name="geometry">
+          <rect>
+           <x>40</x>
+           <y>280</y>
+           <width>81</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>CIN Client</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_Cin_2">
+         <property name="geometry">
+          <rect>
+           <x>200</x>
+           <y>280</y>
+           <width>113</width>
+           <height>26</height>
+          </rect>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="tab_22">
+        <attribute name="title">
+         <string>Calendrier</string>
+        </attribute>
+        <widget class="QCalendarWidget" name="calendarWidget">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>611</width>
+           <height>471</height>
+          </rect>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="tab_23">
+        <attribute name="title">
+         <string>Msg_vocal</string>
+        </attribute>
+        <widget class="QLineEdit" name="lineEdit_vocal">
+         <property name="geometry">
+          <rect>
+           <x>180</x>
+           <y>60</y>
+           <width>161</width>
+           <height>31</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QTextBrowser" name="textBrowser">
+         <property name="geometry">
+          <rect>
+           <x>80</x>
+           <y>120</y>
+           <width>491</width>
+           <height>201</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_11">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>70</y>
+           <width>72</width>
+           <height>14</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>ID Reservation</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_vocal">
+         <property name="geometry">
+          <rect>
+           <x>420</x>
+           <y>400</y>
+           <width>151</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(156, 124, 56);
+border-radius:5px;</string>
+         </property>
+         <property name="text">
+          <string>Gener Audio</string>
          </property>
         </widget>
        </widget>

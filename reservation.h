@@ -39,8 +39,10 @@ public:
     void setCin(int cin);
 
     QSqlQueryModel* afficher();
+    QSqlQueryModel* afficherAvecTri(const QString &critereDeTri);
     Reservation recherche(int id);
     QSqlQueryModel* rechercher(QString critere);
+
 
 
 };

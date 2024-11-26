@@ -153,5 +153,58 @@ QSqlQueryModel* Reservation::   rechercher(QString donnee) {
 
 
 
+QSqlQueryModel* Reservation::afficherAvecTri(const QString &critereDeTri){
+
+    QSqlQueryModel *model = new QSqlQueryModel();
+
+    if(critereDeTri == "NumReservationASC"){
+        model->setQuery(R"(
+            SELECT num_reservation, date_arrivee, date_depart, statut_reservation, montant, cin, type
+            FROM reservation ORDER BY num_reservation ASC
+        )");
+    }
+    else if(critereDeTri == "NumReservationDESC"){
+        model->setQuery(R"(
+            SELECT num_reservation, date_arrivee, date_depart, statut_reservation, montant, cin, type
+            FROM reservation ORDER BY num_reservation DESC
+        )");
+    }
+    else if (critereDeTri == "DateReservationASC"){
+        model->setQuery(R"(
+            SELECT num_reservation, date_arrivee, date_depart, statut_reservation, montant, cin, type
+            FROM reservation ORDER BY date_depart ASC
+        )");
+    }
+    else if (critereDeTri == "DateReservationDESC"){
+        model->setQuery(R"(
+            SELECT num_reservation, date_arrivee, date_depart, statut_reservation, montant, cin, type
+            FROM reservation ORDER BY date_depart DESC
+        )");
+    }
+    else{
+        model->setQuery(R"(
+            SELECT num_reservation, date_arrivee, date_depart, statut_reservation, montant, cin, type
+            FROM reservation
+        )");
+    }
+
+
+
+
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("Num Reservation"));
+    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Date Arrivée"));
+    model->setHeaderData(2, Qt::Horizontal, QObject::tr("Date Départ"));
+    model->setHeaderData(3, Qt::Horizontal, QObject::tr("Statut Reservation"));
+    model->setHeaderData(4, Qt::Horizontal, QObject::tr("Montant"));
+    model->setHeaderData(5, Qt::Horizontal, QObject::tr("CIN"));
+    model->setHeaderData(6, Qt::Horizontal, QObject::tr("Type"));
+
+    return model;
+
+}
+
+
+
+
 
 
