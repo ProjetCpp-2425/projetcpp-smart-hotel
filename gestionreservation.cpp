@@ -594,6 +594,8 @@ void GestionReservation::updateCalendrier() {
 }
 
 
+
+
 void GestionReservation::onDateSelected(const QDate &date)
 {
     QSqlQuery query;
