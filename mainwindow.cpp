@@ -47,7 +47,7 @@
 #include <iostream>
 
 #include "mailling.h"
-
+#include "arduino.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -56,15 +56,23 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     ui->setupUi(this);
+    arduino = new Arduino(this);
+
+       connect(arduino, &Arduino::dataReceived, this, &MainWindow::handleArduinoData);
+
+       if (!arduino->connectArduino()) {
+           QMessageBox::critical(this, "Erreur", "Impossible de se connecter à Arduino.");
+}
+
+
  setupTrayIcon();
 
 
-    QDoubleValidator *montantValidator = new QDoubleValidator(0, 1000000, 2, this); // Limite le montant entre 0 et 1 000 000 avec 2 décimales
-    montantValidator->setLocale(QLocale::English); // Utilise le point (.) comme séparateur décimal
-    ui->lineEdit_3->setValidator(montantValidator);// Applique le validateur au champ du montant
+    QDoubleValidator *montantValidator = new QDoubleValidator(0, 1000000, 2, this);
+    montantValidator->setLocale(QLocale::English);
+    ui->lineEdit_3->setValidator(montantValidator);
 
     refreshTableView();
-
 
 
 
@@ -87,13 +95,14 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
 
-    maxDepense = 100.0;
+    maxDepense = 1000.0;
 
     }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    arduino->disconnectArduino();
 }
 
 void MainWindow::refreshTableView()
@@ -101,7 +110,7 @@ void MainWindow::refreshTableView()
 
     model->setQuery("SELECT id_transaction, type_transaction, date_transaction, etat_paiement, mode_paiement, montant_total FROM transaction");
 
-    // Définit les en-têtes pour chaque colonne
+
     model->setHeaderData(0, Qt::Horizontal, QObject::tr("ID"));
     model->setHeaderData(1, Qt::Horizontal, QObject::tr("Type"));
     model->setHeaderData(2, Qt::Horizontal, QObject::tr("Date"));
@@ -212,9 +221,9 @@ void MainWindow::on_pushButton_44_clicked()
 void MainWindow::on_comboBox_18_selectionChanged()
 {
 
-    QString selectedCriteria = ui->comboBox_18->currentText();  // Assurez-vous que le nom de votre comboBox est correct (ici 'comboBox_18')
+    QString selectedCriteria = ui->comboBox_18->currentText();
 
-    // Créer une requête SQL pour trier en fonction du critère choisi
+
     QString queryStr;
     if (selectedCriteria == "Date") {
         queryStr = "SELECT id_transaction, type_transaction, date_transaction, etat_paiement, mode_paiement, montant_total "
@@ -248,20 +257,20 @@ void MainWindow::generatePdfForPeriod(const QDate &startDate, const QDate &endDa
         fileName.append(".pdf");
     }
 
-    // Configurer l'imprimante pour la sortie PDF
+
     QPrinter pdfPrinter(QPrinter::HighResolution);
     pdfPrinter.setOutputFormat(QPrinter::PdfFormat);
     pdfPrinter.setOutputFileName(fileName);
 
-    // Utiliser QPageLayout pour définir la taille de la page en A4
+    //  la taille de la page en A4
     QPageLayout pageLayout;
     pageLayout.setPageSize(QPageSize(QPageSize::A4));
     pdfPrinter.setPageLayout(pageLayout);
 
-    // Initialiser le contenu HTML pour le PDF
+    // Initialiser HTML pour le PDF
     QString htmlContent;
 
-    // Date actuelle
+    // Date
     QString todayDate = QDate::currentDate().toString("dd/MM/yyyy");
 
     // Construire le contenu HTML
@@ -280,7 +289,7 @@ void MainWindow::generatePdfForPeriod(const QDate &startDate, const QDate &endDa
                    "</style>"
                    "</head><body>";
 
-    // En-tête et titre
+    //  titre
     htmlContent += "<div class='header'>Gestion des Transactions</div>";
     htmlContent += "<div class='title'><h1>Rapport de transactions</h1>"
                    "<h4>Période : " + startDate.toString("dd/MM/yyyy") + " - " + endDate.toString("dd/MM/yyyy") + "</h4>"
@@ -291,7 +300,7 @@ void MainWindow::generatePdfForPeriod(const QDate &startDate, const QDate &endDa
                    "<th>ID Transaction</th><th>Type</th><th>Date</th><th>État</th><th>Mode de Paiement</th><th>Montant</th>"
                    "</tr></thead><tbody>";
 
-    // Exécuter la requête pour obtenir les transactions dans la période spécifiée
+    // Exécuter la requête
     QSqlQuery query;
     query.prepare("SELECT id_transaction, type_transaction, date_transaction, etat_paiement, mode_paiement, montant_total "
                   "FROM transaction WHERE date_transaction BETWEEN TO_DATE(:startDate, 'YYYY-MM-DD') AND TO_DATE(:endDate, 'YYYY-MM-DD')");
@@ -303,7 +312,7 @@ void MainWindow::generatePdfForPeriod(const QDate &startDate, const QDate &endDa
         return;
     }
 
-    // Remplir les lignes du tableau avec les résultats de la requête
+    // Remplir les lignes du tableau
     while (query.next()) {
         htmlContent += "<tr>";
         htmlContent += "<td>" + query.value("id_transaction").toString() + "</td>";
@@ -322,22 +331,20 @@ void MainWindow::generatePdfForPeriod(const QDate &startDate, const QDate &endDa
     QTextDocument document;
     document.setHtml(htmlContent);
 
-    // Imprimer le document dans le fichier PDF
+
     document.print(&pdfPrinter);
 
-    // Confirmation de succès
+
     QMessageBox::information(this, "Succès", "PDF généré avec succès !");
 }
 void MainWindow::on_pushButton_stat_clicked()
 {
-    // Récupérer les dates de début et de fin depuis les champs d'entrée
     QDate dateDebut = ui->dateEdit_5->date();
     QDate dateFin = ui->dateEdit_6->date();
 
-    // Créer une série de graphique en secteurs pour afficher les revenus et les dépenses
+    // Créer une série pour le graphique
     QPieSeries *series = new QPieSeries();
 
-    // Exécuter la requête SQL pour récupérer les données de la période spécifiée
     QSqlQuery query;
     query.prepare("SELECT type_transaction, SUM(montant_total) "
                   "FROM transaction "
@@ -346,24 +353,43 @@ void MainWindow::on_pushButton_stat_clicked()
     query.bindValue(":dateDebut", dateDebut);
     query.bindValue(":dateFin", dateFin);
 
-    // Vérifier si la requête SQL s'exécute correctement
     if (!query.exec()) {
         qDebug() << "Erreur SQL : " << query.lastError().text();
         QMessageBox::critical(this, "Erreur", "Erreur lors de la récupération des données : " + query.lastError().text());
         return;
     }
 
-    // Parcourir les résultats de la requête pour ajouter des segments à la série
+    // Variables pour calculer le total
+    double totalMontant = 0.0;
+    QList<QPair<QString, double>> data;
+
     while (query.next()) {
         QString typeTransaction = query.value(0).toString();
         double montant = query.value(1).toDouble();
+        totalMontant += montant;
+        data.append(qMakePair(typeTransaction, montant));
+    }
+
+    // Vérifier que le total n'est pas nul
+    if (totalMontant == 0) {
+        QMessageBox::information(this, "Aucune donnée", "Il n'y a pas de revenus ou de dépenses dans cette période.");
+        return;
+    }
+
+    // Ajouter les données à la série avec les pourcentages
+    for (const auto &entry : data) {
+        QString typeTransaction = entry.first;
+        double montant = entry.second;
+        double pourcentage = (montant / totalMontant) * 100.0;
 
         if (typeTransaction == "revenu") {
-            QPieSlice *sliceRevenu = series->append("Revenus", montant);
+            QPieSlice *sliceRevenu = series->append(
+                QString("Revenus: %1%").arg(pourcentage, 0, 'f', 1), montant);
             sliceRevenu->setBrush(QColor(173, 216, 230)); // Couleur bleu ciel pour les revenus
             sliceRevenu->setLabelVisible(true);
         } else if (typeTransaction == "depense") {
-            QPieSlice *sliceDepense = series->append("Dépenses", montant);
+            QPieSlice *sliceDepense = series->append(
+                QString("Dépenses: %1%").arg(pourcentage, 0, 'f', 1), montant);
             sliceDepense->setBrush(Qt::blue); // Couleur bleu pour les dépenses
             sliceDepense->setLabelVisible(true);
         }
@@ -372,21 +398,27 @@ void MainWindow::on_pushButton_stat_clicked()
     // Créer un objet QChart pour afficher la série de graphique en secteurs
     QChart *chart = new QChart();
     chart->addSeries(series);
-    chart->setTitle("Répartition des Revenus et Dépenses entre " + dateDebut.toString("dd/MM/yyyy") + " et " + dateFin.toString("dd/MM/yyyy"));
+    chart->setTitle("Répartition des Revenus et Dépenses entre " +
+                    dateDebut.toString("dd/MM/yyyy") + " et " +
+                    dateFin.toString("dd/MM/yyyy"));
+
+    // Ajouter des options d'affichage
+    chart->legend()->setAlignment(Qt::AlignBottom);
 
     // Créer un QChartView pour afficher le graphique
     QChartView *chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
 
-    // Afficher le graphique dans une nouvelle fenêtre ou un widget de la fenêtre principale
+    // Afficher le graphique dans une nouvelle fenêtre
     chartView->resize(800, 600);
     chartView->show();
 }
+
 void MainWindow::afficherPageTransactions() {
     ui->stackedWidget->setCurrentIndex(2);
 }
 
-// Fonction pour afficher la page des chambres
+
 void MainWindow::afficherPageChambres() {
     ui->stackedWidget->setCurrentIndex(3);
 }
@@ -396,7 +428,7 @@ void MainWindow::setupTrayIcon()
     trayIcon->setIcon(QApplication::style()->standardIcon(QStyle::SP_MessageBoxInformation));
     trayIcon->setToolTip("Gestion des transactions");
 
-    // Vérifier si le système supporte les notifications
+
     if (!trayIcon->isSystemTrayAvailable()) {
         QMessageBox::critical(this, "Erreur", "Le système ne supporte pas les notifications de la barre système.");
         return;
@@ -404,50 +436,17 @@ void MainWindow::setupTrayIcon()
 
     trayIcon->setVisible(true);
 
-    // Appeler la fonction pour vérifier les dépenses et afficher une notification si nécessaire
-    checkBudgetExceeded();  // Vérification du budget des dépenses
 
-    // Connecter l'activation de l'icône à une fonction
-    trayIcon->showMessage("attention", "vous avez dépasser le seuil des dépenses", QSystemTrayIcon::Information, 5000);
+
     connect(trayIcon, &QSystemTrayIcon::activated, this, &MainWindow::onTrayIconClicked);
 }
 
 
-void MainWindow::checkBudgetExceeded()
-{
-    qDebug() << "Vérification du dépassement du budget...";
 
-    // Requête SQL pour obtenir la somme totale des dépenses
-    QSqlQuery query;
-    query.prepare("SELECT SUM(montant_total) FROM transaction WHERE type_transaction = 'depense'");
-
-    if (!query.exec()) {
-        qDebug() << "Erreur SQL: " << query.lastError().text();
-        return;
-    }
-
-    if (query.next()) {
-        double totalSpent = query.value(0).toDouble();  // Récupérer la somme des dépenses
-        qDebug() << "Total des dépenses: " << totalSpent;
-
-        double budgetLimit = 1000.0;  // Définir un seuil de budget
-        if (totalSpent > budgetLimit) {
-            // Créer un message avec le montant dépassé et afficher la notification
-            QString message = QString("Budget des dépenses dépassé de %1 !").arg(totalSpent - budgetLimit);
-            trayIcon->showMessage("Alerte Budget",
-                                  message,
-                                  QSystemTrayIcon::Warning,
-                                  5000);  // Afficher pendant 5 secondes
-            qDebug() << "Notification affichée: " << message;
-        } else {
-            qDebug() << "Le budget des dépenses est dans la limite.";
-        }
-    }
-}
 void MainWindow::onTrayIconClicked(QSystemTrayIcon::ActivationReason reason)
 {
     if (reason == QSystemTrayIcon::Trigger) {
-        // Action à exécuter quand l'icône est cliquée
+
         qDebug() << "Icône tray cliquée";
     }
 }
@@ -463,10 +462,10 @@ std::vector<Transaction> MainWindow::chargerTransactionsDepuisBase()
 {
     std::vector<Transaction> transactions;
 
-    // Requête SQL pour récupérer les transactions
+
     QSqlQuery query("SELECT id_transaction, type_transaction, date_transaction,etat_paiement, mode_paiement, montant_total FROM transaction");
 
-    // Boucle pour récupérer chaque transaction et les ajouter dans le vecteur
+
     while (query.next()) {
         int id = query.value(0).toInt();
         QString type = query.value(1).toString();
@@ -475,7 +474,7 @@ std::vector<Transaction> MainWindow::chargerTransactionsDepuisBase()
         QString mode = query.value(2).toString();
         double montant = query.value(5).toDouble();
 
-        // Ajouter l'objet Transaction dans le vecteur
+
         transactions.push_back(Transaction(id, type, date, etat, mode, montant));
     }
 
@@ -486,11 +485,11 @@ void MainWindow::calculerTVA()
 {
     std::vector<Transaction> transactions = chargerTransactionsDepuisBase();
 
-    double tauxTVA = 0.20;  // Taux de TVA à 20%
+    double tauxTVA = 0.19;
     double totalRevenus = 0.0;
     double totalDepenses = 0.0;
 
-    // Parcourir les transactions et calculer les montants de TVA
+
     for (const auto& trans : transactions) {
         if (trans.gettype_transaction() == "revenu") {
             totalRevenus += trans.getmontant_total();
@@ -503,7 +502,7 @@ void MainWindow::calculerTVA()
     double tvaDepenses = totalDepenses * tauxTVA;
     double soldeTVA = tvaRevenus - tvaDepenses;
 
-    // Affichage du résultat dans un QLabel (ou autre widget)
+
     QString message = QString("Total des Revenus : %1\nTotal des Dépenses : %2\n")
                           .arg(totalRevenus)
                           .arg(totalDepenses);
@@ -512,11 +511,28 @@ void MainWindow::calculerTVA()
                   .arg(tvaDepenses);
     message += QString("Solde TVA : %1").arg(soldeTVA);
 
-    ui->lineEdit_25->setText(message);  // Affichage du résultat dans le widget de l'interface utilisateur
+    ui->lineEdit_25->setText(message);
+
+
+    if (tvaRevenus > tvaDepenses) {
+        QString notificationMessage = QString(
+            "Attention : Vous devez payer la TVA. \n"
+            "TVA sur les revenus : %1\n"
+            "TVA sur les dépenses : %2\n"
+            "Montant TVA à payer : %3")
+            .arg(tvaRevenus)
+            .arg(tvaDepenses)
+            .arg(soldeTVA);
+
+
+        trayIcon->showMessage("Notification TVA", notificationMessage, QSystemTrayIcon::Information, 5000);
+
+        qDebug() << "Notification de TVA envoyée : " << notificationMessage;
+    }
 }
 void MainWindow::on_pushButton_calculerTVA_clicked()
 {
-    calculerTVA();  // Appeler la fonction de calcul de TVA
+    calculerTVA();
 }
 
 void MainWindow::sendMailIfMaxDepense() {
@@ -527,13 +543,13 @@ void MainWindow::sendMailIfMaxDepense() {
 
         QString to = "trabelsiasma20@gmail.com";
         QString subject = QString("Max Depense Reached: %1").arg(maxDepense);
-        QString body = QString("Dear Director,\n\n"
-                              "We are writing to inform you that the maximum expenditure has been reached. "
-                              "The current max depense is: %1.\n\n"
-                              "An email has been sent successfully to notify you about this.\n"
-                              "Please take the necessary action if required.\n\n"
-                              "Best regards,\n"
-                              "Smart Hotel").arg(maxDepense);
+        QString body = QString("Cher Directeur,\n\n"
+                               "Nous vous informons que le plafond des dépenses a été atteint. "
+                               "Le montant actuel des dépenses maximales est : %1.\n\n"
+                               "Un email vous a été envoyé avec succès pour vous notifier à ce sujet.\n"
+                               "Veuillez prendre les mesures nécessaires si besoin.\n\n"
+                               "Cordialement,\n"
+                               "Smart Hotel").arg(maxDepense);
 
         bool res = mailer.sendEmail(
                     to,
@@ -555,3 +571,93 @@ void MainWindow::sendMailIfMaxDepense() {
 
     }
 }
+
+void MainWindow::handleArduinoData(QString data)
+{
+    // Divise les données reçues par Arduino (format attendu : "Chambre 1 : 1" ou "Chambre 2 : 0")
+    QStringList parts = data.split(" : ");
+    if (parts.size() != 2) {
+        qDebug() << "Format de données invalide :" << data;
+        return;
+    }
+
+    QString chambre = parts[0].trimmed(); // "Chambre 1" ou "Chambre 2"
+    QString status = parts[1].trimmed(); // "1" si flamme détectée, "0" sinon
+
+    static bool chambre1Alert = false; // État d'alerte pour la chambre 1
+    static bool chambre2Alert = false; // État d'alerte pour la chambre 2
+
+    int idChambre = 0;
+
+    // Associer le capteur à l'ID de la chambre
+    if (chambre == "Chambre 1") {
+        idChambre = 44;
+        chambre1Alert = (status == "1"); // Mémoriser l'état d'alerte
+    } else if (chambre == "Chambre 2") {
+        idChambre = 22;
+        chambre2Alert = (status == "1"); // Mémoriser l'état d'alerte
+    }
+
+    // Si une alerte a été détectée dans au moins une chambre
+    if ((chambre1Alert || chambre2Alert) && idChambre != 0) {
+        QString message;
+
+        // Récupère les informations de la chambre 1 si une flamme est détectée
+        if (chambre1Alert) {
+            QSqlQuery query;
+            query.prepare("SELECT * FROM CHAMBRE WHERE ID_CHAMBRE = 44");
+            if (query.exec() && query.next()) {
+                QString categorie = query.value("CATEGORIE").toString();
+                QString type = query.value("TYPE_CH").toString();
+                QString statut = query.value("STATUT_CHAMBRE").toString();
+                double tarif = query.value("TARIF").toDouble();
+
+                message += "Chambre 1 (ID 44) :\n"
+                           "- Catégorie : " + categorie + "\n"
+                           "- Type : " + type + "\n"
+                           "- Statut : " + statut + "\n"
+                           "- Tarif : " + QString::number(tarif, 'f', 2) + " TND\n\n";
+            } else {
+                qDebug() << "Erreur SQL ou chambre 1 non trouvée : " << query.lastError().text();
+                message += "Chambre 1 (ID 44) : Informations indisponibles.\n\n";
+            }
+        }
+
+        // Récupère les informations de la chambre 2 si une flamme est détectée
+        if (chambre2Alert) {
+            QSqlQuery query;
+            query.prepare("SELECT * FROM CHAMBRE WHERE ID_CHAMBRE = 22");
+            if (query.exec() && query.next()) {
+                QString categorie = query.value("CATEGORIE").toString();
+                QString type = query.value("TYPE_CH").toString();
+                QString statut = query.value("STATUT_CHAMBRE").toString();
+                double tarif = query.value("TARIF").toDouble();
+
+                message += "Chambre 2 (ID 22) :\n"
+                           "- Catégorie : " + categorie + "\n"
+                           "- Type : " + type + "\n"
+                           "- Statut : " + statut + "\n"
+                           "- Tarif : " + QString::number(tarif, 'f', 2) + " TND\n";
+            } else {
+                qDebug() << "Erreur SQL ou chambre 2 non trouvée : " << query.lastError().text();
+                message += "Chambre 2 (ID 22) : Informations indisponibles.\n";
+            }
+        }
+
+        // Affiche l'alerte combinée si les deux chambres détectent une flamme simultanément
+        if (chambre1Alert && chambre2Alert) {
+            QMessageBox::critical(this, "Alerte Incendie !",
+                                  "Des incendies ont été détectés dans les deux chambres :\n\n" + message);
+        }
+        // Affiche une alerte individuelle si une seule chambre détecte une flamme
+        else if (chambre1Alert || chambre2Alert) {
+            QMessageBox::warning(this, "Alerte Incendie !",
+                                 "Un incendie a été détecté :\n\n" + message);
+        }
+
+        // Réinitialise les alertes après traitement
+        chambre1Alert = chambre2Alert = false;
+    }
+}
+
+

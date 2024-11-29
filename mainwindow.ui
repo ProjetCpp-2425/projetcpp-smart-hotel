@@ -1026,7 +1026,7 @@ border-radius:5px;</string>
         </rect>
        </property>
        <property name="currentIndex">
-        <number>3</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="tab">
         <attribute name="title">
@@ -1843,9 +1843,9 @@ border-radius:4px;</string>
         <widget class="QLineEdit" name="lineEdit_25">
          <property name="geometry">
           <rect>
-           <x>60</x>
+           <x>30</x>
            <y>150</y>
-           <width>491</width>
+           <width>551</width>
            <height>91</height>
           </rect>
          </property>

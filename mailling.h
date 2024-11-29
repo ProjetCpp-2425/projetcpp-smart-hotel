@@ -14,7 +14,7 @@ public:
 
 private:
     QString smtpServer = "smtp.gmail.com";
-    int smtpPort = 465; // For SSL
+    int smtpPort = 465; // SSL
     QString emailUser = "trabelsiasma20@gmail.com";
     QString emailPassword = "qrdn sxof mjje ezst";
 };

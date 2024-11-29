@@ -6,6 +6,7 @@
 #include <QDateEdit>
 #include <QtCharts>
 #include <QSystemTrayIcon>
+#include "arduino.h"
 
 #include "transaction.h"
 
@@ -18,6 +19,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -28,20 +30,22 @@ public:
         void sendMailIfMaxDepense();
 
 private slots:
-    void on_pushButton_14_clicked();  // Ajouter une transaction
-    void on_pushButton_16_clicked();  // Supprimer une transaction
-    void on_pushButton_15_clicked();// Modifier une transaction
+    void on_pushButton_14_clicked();
+    void on_pushButton_16_clicked();
+    void on_pushButton_15_clicked();
      void on_pushButton_44_clicked();
        void on_comboBox_18_selectionChanged();
      void generatePdfForPeriod(const QDate &startDate, const QDate &endDate);
   void on_pushButton_stat_clicked();
     void afficherPageTransactions();
     void afficherPageChambres();
-    void checkBudgetExceeded();
+
           void onTrayIconClicked(QSystemTrayIcon::ActivationReason reason);
      void readyRead();
      void connected();
        void on_pushButton_calculerTVA_clicked();
+
+       void handleArduinoData(QString data);
 
 
 
@@ -53,10 +57,13 @@ private:
     QDateEdit *dateEdit_3;
  QSqlQueryModel *model;   // Modèle pour QTableView
 
-     QSystemTrayIcon *trayIcon;
-       void setupTrayIcon();
+ QSystemTrayIcon *trayIcon;
+  Arduino *arduino;
+    void setupTrayIcon();
 
-        double maxDepense = 1000.0;
+
+
+       double maxDepense = 1000.0;
 
 
 
