@@ -35,13 +35,7 @@ private slots:
     void on_pushButton_pdf_clicked();
     void on_pushButton_trier_clicked();
     void on_pushButton_recherche_clicked();
-    void sendSMS(const QString &clientPhoneNumber, const QString &messageBody);
 
-    void notifySMS(const QString &TELEPHONE, const QString &message);
-
-    void on_notifications_clicked();
-
-    bool validateForm();
 
 
 
