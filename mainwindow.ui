@@ -2247,7 +2247,7 @@ border-radius:5px;</string>
         </rect>
        </property>
        <property name="currentIndex">
-        <number>4</number>
+        <number>3</number>
        </property>
        <widget class="QWidget" name="tab_12">
         <attribute name="title">
@@ -2929,7 +2929,7 @@ color: rgb(150, 109, 5);</string>
           <string>numero de client</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="notifications">
+        <widget class="QPushButton" name="pushButton_34">
          <property name="geometry">
           <rect>
            <x>590</x>
@@ -2942,7 +2942,7 @@ color: rgb(150, 109, 5);</string>
           <string>envoyer</string>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_statut">
+        <widget class="QLineEdit" name="lineEdit_26">
          <property name="geometry">
           <rect>
            <x>230</x>
@@ -2952,7 +2952,7 @@ color: rgb(150, 109, 5);</string>
           </rect>
          </property>
         </widget>
-        <widget class="QLineEdit" name="lineEdit_TELEPHONE">
+        <widget class="QLineEdit" name="lineEdit_25">
          <property name="geometry">
           <rect>
            <x>230</x>

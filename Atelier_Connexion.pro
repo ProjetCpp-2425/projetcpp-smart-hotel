@@ -35,12 +35,14 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     connection.cpp \
-    service.cpp
+    service.cpp \
+    sms.cpp
 
 HEADERS += \
         mainwindow.h \
     connection.h \
-    service.h
+    service.h \
+    sms.h
 
 FORMS += \
         mainwindow.ui

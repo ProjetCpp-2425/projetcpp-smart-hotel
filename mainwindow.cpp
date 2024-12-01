@@ -8,18 +8,24 @@
 #include <QPdfWriter>
 #include <QPainter>
 #include <QUrlQuery>
+#include "sms.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    service(new Service()) // Initialize the Service object
+    service(new Service()), // Initialize the Service object
+    smsManager(new SmsManager(this))
 {
     ui->setupUi(this);
     connect(ui->pushButton_afficher, &QPushButton::clicked, this, &MainWindow::refreshTableView);
+    connect(ui->pushButton_34, &QPushButton::clicked, this, &MainWindow::on_pushButton_34_clicked);
+
 }
 
 MainWindow::~MainWindow() {
     delete service; // Release allocated memory
+    delete smsManager;
+
     delete ui;
 }
 
@@ -453,3 +459,20 @@ void MainWindow::on_pushButton_recherche_clicked()
     model->setHeaderData(4, Qt::Horizontal, "Tarif");
 }
 
+void MainWindow::on_pushButton_34_clicked()
+{
+    QString numero = ui->lineEdit_25->text();
+    QString message = ui->lineEdit_26->text();
+
+    if (numero.isEmpty() || message.isEmpty()) {
+        QMessageBox::warning(this, "Erreur", "Veuillez remplir tous les champs.");
+        return;
+    }
+
+    // Ensure smsManager is properly initialized
+    if (smsManager != nullptr) {
+        smsManager->sendSMS(numero, message);
+    } else {
+        QMessageBox::warning(this, "Erreur", "Le gestionnaire SMS n'est pas initialisé.");
+    }
+}

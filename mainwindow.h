@@ -8,6 +8,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include "sms.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -30,18 +31,16 @@ private slots:
     void on_pushButton_supprimer_clicked();
     void on_pushButton_afficher_clicked();
     void refreshTableView();
-
+    void on_pushButton_34_clicked();
     void on_pushButton_statistique_clicked();
     void on_pushButton_pdf_clicked();
     void on_pushButton_trier_clicked();
     void on_pushButton_recherche_clicked();
 
-
-
-
 private:
     Ui::MainWindow *ui;
     Service *service; // Pointer to Service class
+    SmsManager *smsManager; // Declare the SmsManager pointer
 };
 
 #include <QWidget>
@@ -97,7 +96,5 @@ private:
     int cleaningCount = 0;
     int foodCount = 0;
 };
-
-
 
 #endif // MAINWINDOW_H
