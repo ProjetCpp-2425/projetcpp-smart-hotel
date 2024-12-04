@@ -63,6 +63,7 @@ Performance::Performance(QWidget *parent, QSqlDatabase db) : QWidget(parent), da
     connect(cancelButton, &QPushButton::clicked, this, &Performance::close);
 }
 
+
 QString Performance::generateRandomString(int length)
 {
     const QString chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -101,22 +102,26 @@ QImage Performance::generateCaptchaImage(const QString &captchaText)
 void Performance::submitEvaluation()
 {
     // Vérifier le CAPTCHA
-    if (lineEditCaptcha->text() != generatedCaptcha) {
+    if (lineEditCaptcha->text().trimmed() != generatedCaptcha) {
         QMessageBox::warning(this, "Erreur CAPTCHA", "Le CAPTCHA est incorrect. Veuillez réessayer.");
         regenerateCaptcha();
         return;
     }
 
-    // Récupérer les données
-    QString nomPrenom = lineEditNomPrenom->text();
-    QStringList nomPrenomParts = nomPrenom.split(" ");
-    if (nomPrenomParts.size() < 2) {
-        QMessageBox::warning(this, "Erreur", "Veuillez entrer le nom et le prénom.");
+    // Vérifier le champ Nom et Prénom
+    QString nomPrenom = lineEditNomPrenom->text().trimmed();
+    if (nomPrenom.isEmpty()) {
+        QMessageBox::warning(this, "Erreur", "Veuillez entrer un nom et un prénom.");
         return;
     }
-    QString commentaire = plainTextEditCommentaire->toPlainText();
 
-    // Calculer le score
+    QStringList nomPrenomParts = nomPrenom.split(" ");
+    if (nomPrenomParts.size() < 2) {
+        QMessageBox::warning(this, "Erreur", "Veuillez entrer un nom et un prénom valides (au moins deux mots).");
+        return;
+    }
+
+    // Vérifier qu'au moins une note a été sélectionnée
     int score = 0;
     for (int i = 0; i < 5; ++i) {
         if (checkBoxRatings[i]->isChecked()) {
@@ -129,7 +134,14 @@ void Performance::submitEvaluation()
         return;
     }
 
-    // Sauvegarde dans la base de données
+    // Vérifier la connexion à la base de données
+    if (!database.isOpen()) {
+        QMessageBox::critical(this, "Erreur", "Connexion à la base de données échouée.");
+        return;
+    }
+
+    // Sauvegarder dans la base de données
+    QString commentaire = plainTextEditCommentaire->toPlainText();
     QSqlQuery query(database);
     query.prepare("INSERT INTO performance (cin_employe, date_evaluation, score, commentaire) "
                   "VALUES ((SELECT cin FROM employe WHERE nom = :nom AND prenom = :prenom), "

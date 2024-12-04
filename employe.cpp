@@ -45,8 +45,8 @@ bool Employe::ajouter() {
     QSqlQuery query;
 
     // Prepare the SQL query
-    bool prepared = query.prepare("INSERT INTO EMPLOYE (cin, nom, prenom, question, sexe, poste, date_embauche, salaire) "
-                                  "VALUES (:cin, :nom, :prenom, :question, :sexe, :poste, :date_embauche, :salaire)");
+    bool prepared = query.prepare("INSERT INTO EMPLOYE (cin, nom, prenom, question, sexe, poste, date_embauche, salaire, mot_de_passe) "
+                                  "VALUES (:cin, :nom, :prenom, :question, :sexe, :poste, :date_embauche, :salaire, :mot_de_passe)");
 
     if (!prepared) {
         qDebug() << "SQL Preparation Error:" << query.lastError().text();
@@ -62,17 +62,19 @@ bool Employe::ajouter() {
     query.bindValue(":poste", this->poste);
     query.bindValue(":date_embauche", this->date_embauche);
     query.bindValue(":salaire", this->salaire);
+    query.bindValue(":mot_de_passe", this->mot_de_passe);  // Bind mot_de_passe
 
     // Log bound values to help debug parameter mismatch issues
     qDebug() << "Attempting to insert with values:";
     qDebug() << "CIN:" << this->cin;
     qDebug() << "Nom:" << this->nom;
     qDebug() << "Prenom:" << this->prenom;
-    qDebug() << "question:" << this->question;
+    qDebug() << "Question:" << this->question;
     qDebug() << "Sexe:" << this->sexe;
     qDebug() << "Poste:" << this->poste;
-    qDebug() << "date_embauche:" << this->date_embauche;
+    qDebug() << "Date embauche:" << this->date_embauche;
     qDebug() << "Salaire:" << this->salaire;
+    qDebug() << "Mot de passe:" << this->mot_de_passe;  // Log mot_de_passe
 
     // Execute the query and check for errors
     if (!query.exec()) {
@@ -114,7 +116,7 @@ bool Employe::supprimer(int cin) {
 // Method to display employees
 QSqlQueryModel* Employe::afficher() {
     QSqlQueryModel* model = new QSqlQueryModel();
-    model->setQuery("SELECT * FROM employe");
+    model->setQuery("SELECT cin, nom, prenom, question, sexe, poste, date_embauche, salaire, mot_de_passe, rfid FROM employe");
     return model;
 }
 

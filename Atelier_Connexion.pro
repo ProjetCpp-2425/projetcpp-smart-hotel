@@ -28,8 +28,16 @@ QT += charts
 QT += core gui network
 QT       += core gui charts
 
+QT += core gui serialport sql
+CONFIG += c++17
+
+QT += serialport
+QT += core gui sql serialport
+
+QT += sql
 
 SOURCES += \
+    arduino.cpp \
     employe.cpp \
         main.cpp \
         mainwindow.cpp \
@@ -38,6 +46,7 @@ SOURCES += \
     statistique.cpp
 
 HEADERS += \
+    arduino.h \
     employe.h \
         mainwindow.h \
     connection.h \
