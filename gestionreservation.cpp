@@ -18,15 +18,23 @@
 #include <QBarSet>
 #include <QtCharts>
 
+#include <QTimer>
+#include <QThread>
+
+
 
 GestionReservation::GestionReservation(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::GestionReservation)
 {
+
     ui->setupUi(this);
 
     ui->tableView_reservation->setModel(this->reservation.afficher());
     ui->tableView_reservation->resizeColumnsToContents();
+
+    ui->dateEdit_arrive->setDate(QDate::currentDate());
+    ui->dateEdit_depart->setDate(QDate::currentDate());
 
     connect(ui->tabWidget_2, &QTabWidget::currentChanged, this, &GestionReservation::onTabChanged);
     connect(ui->comboBox_stat, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &GestionReservation::updateChart);
@@ -40,20 +48,49 @@ GestionReservation::GestionReservation(QWidget *parent)
 
     //connect(ui->pushButton_vocal, &QPushButton::clicked, this, &GestionReservation::on_pushButton_vocal_clicked);
 
-    int ret=A.connect_arduino(); // lancer la connexion à arduino
+    A.is_connected = 0;
+
+    int ret=A.connect_arduino("COM7"); // lancer la connexion à arduino
+
+
     switch(ret){
         case(0):qDebug()<< "arduino is available and connected to : "<< A.getarduino_port_name();
+            A.is_connected = 1;
             break;
         case(1):qDebug() << "arduino is available but not connected to :" <<A.getarduino_port_name();
+            A.is_connected = 0;
            break;
         case(-1):qDebug() << "arduino is not available";
+            A.is_connected = 0;
+
     }
+
+    connect(ui->pushButton_readArduino,&QPushButton::clicked,this,&GestionReservation::on_pushButton_readArduino_clicked);
+
+    //arduinoThread = new QThread(this);
+    QTimer *arduinoTimer = new QTimer(this);
+
+    connect(arduinoTimer, &QTimer::timeout, this, &GestionReservation::readArduinoContinuously);
+    if (A.is_connected) {
+        arduinoTimer->start(1000); // Check Arduino every 1000ms
+    }
+
+    //connect(arduinoThread, &QThread::started, this, &GestionReservation::readArduinoContinuously);
+    connect(this, &GestionReservation::motionDetected, this, &GestionReservation::showMotionMessage);
+
+    timenow = QDateTime::currentDateTime();
+    derniereDetectMouvement = QDateTime::currentDateTime();
 
 
 }
 
 GestionReservation::~GestionReservation()
 {
+    if (arduinoThread) {
+            arduinoThread->quit();
+            arduinoThread->wait();
+            delete arduinoThread;
+    }
     delete ui;
 }
 
@@ -65,9 +102,6 @@ void GestionReservation::on_pushButton_ajouter_clicked()
     QString type = ui->comboBox_type->currentText();
     QString statutReservation = ui->comboBox_status->currentText();
     QString cinText = ui->lineEdit_cin->text();
-
-
-
 
     if (montantText.isEmpty() || type.isEmpty() || statutReservation.isEmpty() || cinText.isEmpty()) {
         QMessageBox::warning(this, "Champs manquants", "Veuillez remplir tous les champs obligatoires.");
@@ -82,7 +116,7 @@ void GestionReservation::on_pushButton_ajouter_clicked()
     bool test;
     double montant = montantText.toDouble(&test);
 
-    if (test == false  || montant <= 0) {
+    if (test == false || montant <= 0) {
         QMessageBox::warning(this, "Montant invalide", "Veuillez entrer un montant valide et positif.");
         return;
     }
@@ -94,8 +128,7 @@ void GestionReservation::on_pushButton_ajouter_clicked()
         return;
     }
 
-
-
+    // Prepare SQL query to insert reservation
     QSqlQuery query;
     query.prepare(R"(
         INSERT INTO reservation (date_arrivee, date_depart, statut_reservation, montant, type, cin)
@@ -109,43 +142,80 @@ void GestionReservation::on_pushButton_ajouter_clicked()
     query.bindValue(":type", type);
     query.bindValue(":cin", cin);
 
-
-
-
-    if (query.exec() == false ) {
+    // Execute reservation query
+    if (query.exec() == false) {
         QMessageBox::critical(this, "Erreur", "Échec de l'ajout de la réservation dans la base de données. Vérifiez si le CIN existe dans la table clients.");
-    } else { //true
+    } else { // Reservation was added successfully
         QMessageBox::information(this, "Succès", "Réservation ajoutée avec succès !");
 
+        // Log the action into HISTORIQUE
+        QString evenement = "Ajout de reservation";
+        QString actionDetails = QString("CIN: %1, Type: %2, Montant: %3, Date Arrivée: %4, Date Départ: %5")
+                                    .arg(cin)
+                                    .arg(type)
+                                    .arg(montant)
+                                    .arg(dateArrivee.toString("yyyy-MM-dd"))
+                                    .arg(dateDepart.toString("yyyy-MM-dd"));
+        // Assuming the `clientId` is the same as the `cin` (adjust accordingly if necessary)
+        if (ajouterHistorique(cin, evenement, actionDetails)) {
+            qDebug() << "Historique ajouté avec succès.";
+        } else {
+            qDebug() << "Erreur lors de l'ajout de l'historique.";
+        }
+
+        // Update UI with new reservation list
         ui->tableView_reservation->setModel(this->reservation.afficher());
         ui->tableView_reservation->resizeColumnsToContents();
 
+        // Clear the fields
         ui->lineEdit_Montant->clear();
         ui->lineEdit_cin->clear();
         ui->dateEdit_arrive->setDate(QDate::currentDate());
         ui->dateEdit_depart->setDate(QDate::currentDate().addDays(1));
         ui->comboBox_type->setCurrentIndex(0);
         ui->comboBox_status->setCurrentIndex(0);
+
         updateCalendrier();
     }
 }
 
+
 void GestionReservation::on_pushButton_19_clicked()
 {
+    int numReservation = ui->lineEdit_Supprimer->text().toInt();
+
+    if (numReservation <= 0) {
+        QMessageBox::warning(this, "Champs manquant", "Veuillez entrer un numéro de réservation valide.");
+        return;
+    }
+
     QSqlQuery query;
-        query.prepare("DELETE FROM reservation WHERE num_reservation = :num_reservation");
-        query.bindValue(":num_reservation", ui->lineEdit_Supprimer->text().toInt());
+    query.prepare("DELETE FROM reservation WHERE num_reservation = :num_reservation");
+    query.bindValue(":num_reservation", numReservation);
 
-        if (query.exec() && query.numRowsAffected() > 0) {
-            QMessageBox::information(this, "Succès", "La réservation a été supprimée avec succès.");
-            ui->tableView_reservation->setModel(this->reservation.afficher());
-            ui->tableView_reservation->resizeColumnsToContents();
-            updateCalendrier();
+    if (query.exec() && query.numRowsAffected() > 0) {
+        QMessageBox::information(this, "Succès", "La réservation a été supprimée avec succès.");
 
+        // Log deletion in HISTORIQUE
+        QString evenement = "Suppression de réservation";
+        QString actionDetails = QString("Réservation ID: %1 supprimée").arg(numReservation);
+        if (ajouterHistorique(123456, evenement, actionDetails)) { // Pass 0 as CIN since it's unknown for deletion
+            qDebug() << "Historique ajouté avec succès.";
         } else {
-            QMessageBox::critical(this, "Erreur de suppression", "Échec de la suppression de la réservation. ");
+            qDebug() << "Erreur lors de l'ajout de l'historique.";
         }
+
+        // Update the table and reset UI
+        ui->tableView_reservation->setModel(this->reservation.afficher());
+        ui->tableView_reservation->resizeColumnsToContents();
+        updateCalendrier();
+        ui->lineEdit_Supprimer->clear();
+
+    } else {
+        QMessageBox::critical(this, "Erreur de suppression", "Échec de la suppression de la réservation.");
+    }
 }
+
 
 void GestionReservation::on_pushButton_rechercher_clicked()
 {
@@ -219,7 +289,6 @@ void GestionReservation::on_pushButton_modifier_clicked()
     double montant = montantText.toDouble(&montantOk);
     int cin = cinText.toInt(&cinOk);
 
-
     if (!montantOk || montant <= 0) {
         QMessageBox::warning(this, "Montant invalide", "Veuillez entrer un montant valide et positif.");
         return;
@@ -229,7 +298,6 @@ void GestionReservation::on_pushButton_modifier_clicked()
         QMessageBox::warning(this, "CIN invalide", "Veuillez entrer un CIN valide.");
         return;
     }
-
 
     QSqlQuery query;
     query.prepare(R"(
@@ -254,6 +322,22 @@ void GestionReservation::on_pushButton_modifier_clicked()
     if (query.exec() && query.numRowsAffected() > 0) {
         QMessageBox::information(this, "Succès", "Réservation modifiée avec succès !");
 
+        // Log modification in HISTORIQUE
+        QString evenement = "Modification de réservation";
+        QString actionDetails = QString("ID: %1, CIN: %2, Type: %3, Montant: %4, Date Arrivée: %5, Date Départ: %6")
+                                    .arg(id)
+                                    .arg(cin)
+                                    .arg(type)
+                                    .arg(montant)
+                                    .arg(dateArrivee.toString("yyyy-MM-dd"))
+                                    .arg(dateDepart.toString("yyyy-MM-dd"));
+        if (ajouterHistorique(cin, evenement, actionDetails)) {
+            qDebug() << "Historique ajouté avec succès.";
+        } else {
+            qDebug() << "Erreur lors de l'ajout de l'historique.";
+        }
+
+        // Update the table and reset UI fields
         ui->tableView_reservation->setModel(this->reservation.afficher());
         ui->tableView_reservation->resizeColumnsToContents();
 
@@ -265,11 +349,11 @@ void GestionReservation::on_pushButton_modifier_clicked()
         ui->comboBox_type_2->setCurrentIndex(0);
         ui->comboBox_status_2->setCurrentIndex(0);
         updateCalendrier();
-
     } else {
         QMessageBox::critical(this, "Erreur", "Échec de la modification de la réservation. Vérifiez si le CIN existe dans la table clients.");
     }
 }
+
 
 
 
@@ -711,3 +795,140 @@ void GestionReservation::TriChanged()
     ui->tableView_reservation->resizeColumnsToContents();
 }
 
+
+void GestionReservation::on_pushButton_vocal_clicked()
+{
+
+}
+
+
+void GestionReservation::on_pushButton_readArduino_clicked()
+{
+    // Récupérer l'ID client depuis le champ de saisie
+        QString clientId = ui->lineEdit_IDCLIENT->text();
+
+        // Vérifier si l'ID client est valide
+        if (clientId.isEmpty()) {
+            QMessageBox::warning(this, "Entrée invalide", "Veuillez saisir un ID client valide.");
+            return;
+        }
+
+        // Préparer la requête SQL
+        QSqlQuery query;
+        query.prepare("SELECT ID, EVENEMENT, DETAILS, TO_CHAR(DATES, 'YYYY-MM-DD HH24:MI:SS') AS LOG_DATE, CLIENT_ID "
+                      "FROM HISTORIQUE WHERE CLIENT_ID = :clientId ORDER BY DATES DESC");
+        query.bindValue(":clientId", clientId);
+
+        // Exécuter la requête
+        if (!query.exec()) {
+            QMessageBox::critical(this, "Erreur Base de Données", "Échec de la récupération des logs : " + query.lastError().text());
+            return;
+        }
+
+        // Créer la sortie des logs sous forme de texte
+        QString sortieLogs;
+
+        while (query.next()) {
+            QString id = query.value("ID").toString();
+            QString evenement = query.value("EVENEMENT").toString();
+            QString details = query.value("DETAILS").toString();
+            QString dateHeure = query.value("LOG_DATE").toString();
+            QString clientId = query.value("CLIENT_ID").toString();
+
+            // Formater le log en texte
+            sortieLogs += QString("ID: %1\nÉvénement: %2\nDétails: %3\nDate: %4\nClient ID: %5\n\n")
+                              .arg(id)
+                              .arg(evenement)
+                              .arg(details)
+                              .arg(dateHeure)
+                              .arg(clientId);
+        }
+
+        // Vérifier si des logs ont été trouvés
+        if (sortieLogs.isEmpty()) {
+            sortieLogs = "Aucun log trouvé pour l'ID client spécifié.";
+        }
+
+        // Afficher les logs dans un QTextBrowser ou QTextEdit
+        ui->textBrowser->setPlainText(sortieLogs);
+}
+
+void GestionReservation::readArduinoContinuously()
+{
+    timenow = QDateTime::currentDateTime();
+
+    if (!A.is_connected  ) {
+        return; // Stop processing if Arduino is not connected
+    }
+
+    QString textrecu="aucun Mouvement";
+
+    QByteArray text = A.read_from_arduino();
+
+    textrecu = QString(text).trimmed();
+
+
+    if (textrecu == "D:1" && derniereDetectMouvement.msecsTo(timenow) > 5000) {
+        derniereDetectMouvement = QDateTime::currentDateTime();
+
+        QMessageBox::warning(this, "Detection De Mouvement", "il ya mouvement dans la  :chambre 1.");
+
+
+    } else if (textrecu == "D:2"&&derniereDetectMouvement.msecsTo(timenow) > 5000) {
+        derniereDetectMouvement = QDateTime::currentDateTime();
+
+        QMessageBox::warning(this, "Detection De Mouvement", "il ya mouvement dans la  :  chambre 2.");
+
+    }
+    qDebug() << textrecu;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void GestionReservation::showMotionMessage(const QString &chambre)
+{
+    QMessageBox::warning(this, "Detection De Mouvement", "il ya mouvement dans la  :  " + chambre + ".");
+}
+
+
+bool GestionReservation::ajouterHistorique(int clientId, QString &evenement, QString &details)
+{
+    QSqlQuery query;
+    query.prepare(R"(
+        INSERT INTO HISTORIQUE
+        ("CLIENT_ID", "EVENEMENT", "DETAILS", "DATES")
+        VALUES (:client_id, :evenement, :details, TO_DATE(:date_action, 'YYYY-MM-DD HH24:MI:SS'))
+    )");
+
+    QString currentDateTime = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss");
+
+    query.bindValue(":client_id", clientId);
+    query.bindValue(":evenement", evenement);
+    query.bindValue(":details", details);
+    query.bindValue(":date_action", currentDateTime);
+
+    if (!query.exec()) {
+        qDebug() << "Error inserting into HISTORIQUE:" << query.lastError().text();
+        return false;
+    }
+    return true;
+}

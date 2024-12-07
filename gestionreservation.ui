@@ -429,7 +429,7 @@ border-radius:5px;</string>
         </rect>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>4</number>
        </property>
        <widget class="QWidget" name="tab_3">
         <attribute name="title">
@@ -683,7 +683,7 @@ border-radius:5px;</string>
           </rect>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="tab_19">
           <attribute name="title">
@@ -1402,9 +1402,9 @@ border-radius:5px;</string>
        </widget>
        <widget class="QWidget" name="tab_23">
         <attribute name="title">
-         <string>Msg_vocal</string>
+         <string>Historique</string>
         </attribute>
-        <widget class="QLineEdit" name="lineEdit_vocal">
+        <widget class="QLineEdit" name="lineEdit_IDCLIENT">
          <property name="geometry">
           <rect>
            <x>180</x>
@@ -1420,7 +1420,7 @@ border-radius:5px;</string>
            <x>80</x>
            <y>120</y>
            <width>491</width>
-           <height>201</height>
+           <height>311</height>
           </rect>
          </property>
         </widget>
@@ -1434,14 +1434,14 @@ border-radius:5px;</string>
           </rect>
          </property>
          <property name="text">
-          <string>ID Reservation</string>
+          <string>Cin Client</string>
          </property>
         </widget>
         <widget class="QPushButton" name="pushButton_vocal">
          <property name="geometry">
           <rect>
            <x>420</x>
-           <y>400</y>
+           <y>1380</y>
            <width>151</width>
            <height>31</height>
           </rect>
@@ -1452,6 +1452,36 @@ border-radius:5px;</string>
          </property>
          <property name="text">
           <string>Gener Audio</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_readArduino">
+         <property name="geometry">
+          <rect>
+           <x>370</x>
+           <y>60</y>
+           <width>151</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(156, 124, 56);
+border-radius:5px;</string>
+         </property>
+         <property name="text">
+          <string>Recherche</string>
+         </property>
+        </widget>
+        <widget class="QCheckBox" name="checkBox_5">
+         <property name="geometry">
+          <rect>
+           <x>230</x>
+           <y>1700</y>
+           <width>93</width>
+           <height>26</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>CheckBox</string>
          </property>
         </widget>
        </widget>

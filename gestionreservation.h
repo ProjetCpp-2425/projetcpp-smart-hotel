@@ -24,7 +24,11 @@ public:
     void onTabChanged(int index);
     void updateCalendrier();
     void readReservationData(int id);
+    bool ajouterHistorique(int clientId, QString &evenement, QString &details);
 
+
+signals:
+    void motionDetected(const QString &room);
 
 private slots:
     void on_pushButton_ajouter_clicked();
@@ -45,6 +49,8 @@ private slots:
 
     void TriChanged();
 
+    void readArduinoContinuously();
+    void showMotionMessage(const QString &room);
 
 
     void on_pushButton_goto_confirmation_clicked();
@@ -54,10 +60,25 @@ private slots:
 
     void on_pushButton_19_destroyed(QObject *arg1);
 
+    void on_pushButton_vocal_clicked();
+
+    void on_pushButton_readArduino_clicked();
+
 private:
     Ui::GestionReservation *ui;
     Reservation reservation;
+
+
     Arduino A;
+
+
+
+    QThread *arduinoThread;
+    QDateTime timenow;
+    QDateTime derniereDetectMouvement;
+
+
+
 
 
 };
