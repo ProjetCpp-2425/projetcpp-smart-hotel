@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/image">
+        <file>photoReservation/dashboard_white.png</file>
+        <file>photoReservation/icons8-chercher-32.png</file>
+        <file>photoReservation/icons8-client-50.png</file>
+        <file>photoReservation/icons8-employe-50.png</file>
+        <file>photoReservation/icons8-finance-48 (1).png</file>
+        <file>photoReservation/icons8-lit-50.png</file>
+        <file>photoReservation/icons8-reservation-64 (1).png</file>
+        <file>photoReservation/icons8-reservation-64.png</file>
+        <file>photoReservation/icons8-service-50 (1).png</file>
+        <file>photoReservation/icons8-service-50.png</file>
+        <file>photoReservation/icons8-sortie-50 (1).png</file>
+        <file>photoReservation/icons8-sortie-50.png</file>
+        <file>photoReservation/icons8-utilisateur-50.png</file>
+        <file>photoReservation/logo.png</file>
+        <file>photoReservation/pngwing.com (1).png</file>
+        <file>photoReservation/pngwing.com (4).png</file>
+    </qresource>
+</RCC>
