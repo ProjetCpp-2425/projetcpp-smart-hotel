@@ -4538,7 +4538,7 @@ void MainWindow::readArduinoContinuously()
 
         // Query the database to get the chamber's status
         QSqlQuery query;
-        query.prepare("SELECT STATUT_CHAMBRE FROM CHAMBRES WHERE ID_DET = :id_det");
+        query.prepare("SELECT STATUT_CHAMBRE FROM CHAMBRE WHERE ID_DET = :id_det");
         query.bindValue(":id_det", id_det);
 
         if (query.exec() && query.next()) {
