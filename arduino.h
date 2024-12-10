@@ -13,7 +13,7 @@ public:
     explicit Arduino(QObject *parent = nullptr);  // Constructeur
     ~Arduino();  // Destructeur
 
-    bool openConnection(const QString &portName, int baudRate);  // Ouvre la connexion série
+    bool openConnection(const QString &portName, int baudRate);
     void closeConnection();  // Ferme la connexion série
     bool isConnected() const;  // Vérifie si la connexion est active
     void writeData(const QByteArray &data);  // Envoie des données au port série

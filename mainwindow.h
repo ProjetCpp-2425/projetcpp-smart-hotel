@@ -40,7 +40,7 @@ private slots:
     void on_pushButton_ajouter_clicked();
     void on_pushButton_modifier_clicked();
     void on_pushButton_supprimer_clicked();
-    void on_pushButton_chercher_clicked();
+    //void on_pushButton_chercher_clicked();
     void on_pushButton_statistique_clicked();
     void on_comboBox_trier_currentIndexChanged(int index);  // Déclarez le slot ici
     void on_comboBox_recherche_currentIndexChanged(int index);
@@ -55,21 +55,24 @@ private slots:
 
     void on_pushButton_envoyer_clicked();
 
-    void readSerialData(); // Slot pour traiter les données du port série
+    //void readSerialData(); // Slot pour traiter les données du port série
 
-    void afficherMessage(const QString &message);
+    //void afficherMessage(const QString &message);
 
    // void slotRecevoirMorceau(const QString &morceau);
 
-    void traiterRFID(const QString &uid);
+    //void traiterRFID(const QString &uid);
 
-    void onClientFound(const QString &rfid);  // Slot pour recevoir l'UID et afficher les infos
 
-    void slotRecevoirMorceau(const QByteArray &data);  // Slot to handle incoming data
+
+    //void slotRecevoirMorceau(const QByteArray &data);  // Slot to handle incoming data
 
 
 
 private:
+
+
+
     // Login validation and authentication
     bool validateLoginInputs(const QString &cin, const QString &mot_de_passe); // Validate login fields
     bool authenticate(const QString &cin, const QString &mot_de_passe);       // Authenticate user
@@ -109,6 +112,7 @@ private:
         void handleData(const QByteArray &data);
         // Traitement des données Arduino (exemple : UID)
         // void checkClientByUID(const QString &UIDC);
+        void onClientFound(const QString &RFID);  // Slot pour recevoir l'UID et afficher les infos
 
         // Liste pour stocker les morceaux de texte
             QList<QString> morceaux;

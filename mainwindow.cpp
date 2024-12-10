@@ -45,19 +45,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pushButton_pdf->setText("Exporter PDF");
 
 
-    serial = new QSerialPort(this);
-    serial->setPortName("COM5"); // Remplacez par le port de votre Arduino
-    serial->setBaudRate(QSerialPort::Baud9600);
-    serial->setDataBits(QSerialPort::Data8);
-    serial->setParity(QSerialPort::NoParity);
-    serial->setStopBits(QSerialPort::OneStop);
-    serial->setFlowControl(QSerialPort::NoFlowControl);
 
     //connect(serial, &QSerialPort::readyRead, this, &MainWindow::readSerialData);
 
-    if (!serial->open(QIODevice::ReadOnly)) {
-        qDebug() << "Erreur : Impossible d'ouvrir le port série.";
-    }
+
 
     connect(ui->pushButton_pdf, &QPushButton::clicked, this, &MainWindow::on_pushButton_pdf_clicked);
 
@@ -71,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->pushButton_envoyer, &QPushButton::clicked, this, &MainWindow::on_pushButton_envoyer_clicked);
 
-    connect(arduino, &Arduino::clientFound, this, &MainWindow::onClientFound);  // Connexion du signal
+    //connect(arduino, &Arduino::clientFound, this, &MainWindow::onClientFound);  // Connexion du signal
 
     //connect(arduino, &Arduino::dataReceived, this, &MainWindow::slotRecevoirMorceau);
     //connect(arduino, &Arduino::dataReceived, this, &MainWindow::slotRecevoirMorceau, Qt::QueuedConnection);
@@ -88,97 +79,119 @@ MainWindow::MainWindow(QWidget *parent)
             qDebug() << "Échec de la connexion à l'Arduino.";
         }
     }*/
-    arduino = new Arduino(this);
+    Arduino arduino;
 
-              // Connexion du signal dataReceived à un slot pour traiter les données
-             // connect(arduino, &Arduino::dataReceived, this, &MainWindow::handleData);
-              connect(arduino, &Arduino::clientFound, this, &MainWindow::onClientFound);
-
-              // Vous pouvez aussi essayer d'ouvrir la connexion avec l'Arduino ici si nécessaire
-              QString portName = "COM5";  // Remplacez par le nom correct du port
-              int baudRate = 9600;        // Le taux de baud par défaut  (Définit la vitesse de communication série à 9600 bauds)
-              // Appelle la méthode openConnection pour établir une connexion série.
-              if (arduino->openConnection(portName, baudRate)) {
-                  qDebug() << "Arduino connecté avec succès!";
-              } else {
-                  qDebug() << "Échec de la connexion à l'Arduino.";
-              }
- }
+            // Essayer de se connecter au port série
+    if (arduino.openConnection("COM5", QSerialPort::Baud9600)) {
+        qDebug() << "Arduino connecté avec succès!";
+    } else {
+        qDebug() << "Échec de la connexion à l'Arduino.";
+    }
+}
 
 
 MainWindow::~MainWindow() {
     delete ui;
 }
 
-/*void MainWindow::onClientFound(const QString &rfid) {
-    qDebug() << "UID reçu : " << rfid;
+void MainWindow::onClientFound(const QString &RFID) {
+    qDebug() << "UID reçu : " << RFID;
+
+    // Nettoyer l'UID en supprimant les espaces
+    QString cleanedRFID = RFID.trimmed();
+    qDebug() << "UID nettoyé : " << cleanedRFID;
 
     // Requête SQL pour récupérer les informations de l'employé par RFID
     QSqlQuery query;
-    query.prepare("SELECT CIN, NOM, PRENOM FROM EMPLOYE WHERE RFID = :rfid");
-    query.bindValue(":rfid", rfid);
+    query.prepare("SELECT CIN, NOM, PRENOM FROM EMPLOYE WHERE RFID = :RFID");
+    query.bindValue(":RFID", cleanedRFID);
 
     if (query.exec()) {
         if (query.next()) {
-                // Client trouvé
-                QString clientInfo = QString("CIN : %1\nNom : %2\nPrénom : %3\nHeure de détection : %4")
+            // Client trouvé
+            QString clientInfo = QString("CIN : %1\nNOM : %2")
                                         .arg(query.value(0).toString())
-                                        .arg(query.value(1).toString())
-                                        .arg(query.value(2).toString())
-                                        .arg(query.value(3).toString());
-                QMessageBox::information(this, "Client trouvé", clientInfo);
+                                        .arg(query.value(1).toString());
+            QMessageBox::information(this, "Client trouvé", clientInfo);
+
+            // Préparer le message pour l'écran LCD
+            QString nom = query.value(1).toString();
+            QString prenom = query.value(2).toString();
+
+            // Limitez les longueurs des chaînes pour l'affichage LCD
+            nom = nom.left(16);
+            prenom = prenom.left(16);
+
+            QString lcdMessage = QString("%1,%2\n").arg(nom).arg(prenom);
+            qDebug() << "Message envoyé à Arduino : " << lcdMessage;
+
+            // Envoyez le message à l'Arduino
+            arduino->writeData(lcdMessage.toUtf8());
+
         } else {
             // Aucun employé trouvé pour ce RFID
             qDebug() << "Aucun employé trouvé pour ce RFID";
             QMessageBox::warning(this, "Employé introuvable", "Aucun employé correspondant trouvé pour cet UID.");
+
+            // Envoyer "UNKNOWN" à l'Arduino
+            arduino->writeData("UNKNOWN\n");
         }
     } else {
         // Afficher l'erreur SQL dans le cas où la requête échoue
         qDebug() << "Erreur SQL : " << query.lastError().text();
         QMessageBox::critical(this, "Erreur SQL", "Erreur lors de la requête.");
+
+        // Envoyer "UNKNOWN" à l'Arduino en cas d'erreur de requête
+        arduino->writeData("UNKNOWN\n");
     }
-}*/
+}
 
-void MainWindow::onClientFound(const QString &RFID) {
+/*void MainWindow::onClientFound(const QString &RFID) {
     QSqlQuery query;
-    query.prepare("SELECT CIN, NOM, PRENOM FROM EMPLOYE WHERE UPPER(RFID) = UPPER(:RFID)");
-    query.bindValue(":RFID", RFID); //Cette ligne lie la valeur du paramètre :UIDC
 
+    // Préparez la requête avec un paramètre correctement nommé
+    query.prepare("SELECT CIN, NOM, PRENOM FROM EMPLOYE WHERE RFID = :RFID");
+    query.bindValue(":RFID", RFID); // Utilisez le même nom que dans la requête SQL
+
+    // Exécution de la requête
     if (!query.exec()) {
         qDebug() << "Erreur lors de la requête : " << query.lastError().text();
-        QMessageBox::critical(this, "Erreur", "Impossible de rechercher le fournisseur."); //Affiche une boîte de dialogue d'erreur avec un message
-        //indiquant qu'il est impossible de rechercher le fournisseur.
+        QMessageBox::critical(this, "Erreur", "Impossible de rechercher le fournisseur.");
         return;
     }
-//query.next Passe au premier résultat de la requête (s'il existe).
+
+    // Vérifiez si un résultat existe
     if (query.next()) {
-        QString fournisseurInfo = QString("CIN: %1\nNOM: %2\nPRENOM: %3")//Crée une chaîne formatée qui contient les informations du fournisseur sous forme de texte lisible.
-                                  .arg(query.value(0).toString())
-                                  .arg(query.value(1).toString())
-                                  .arg(query.value(2).toString());
+        // Extraction des données
+        QString fournisseurInfo = QString("CIN: %1\nNOM: %2\nPRENOM: %3")
+                                  .arg(query.value("cin").toString())  // Utilisez les noms de colonnes pour plus de clarté
+                                  .arg(query.value("nom").toString())
+                                  .arg(query.value("prenom").toString());
         QMessageBox::information(this, "Fournisseur trouvé", fournisseurInfo);
 
-        //Formatage pour affichage sur un écran LCD
+        // Préparez le message pour l'écran LCD
+        QString nom = query.value("nom").toString();
+        QString prenom = query.value("prenom").toString();
 
-        QString prenom = query.value(1).toString();
-        QString nom = query.value(2).toString();
-
-        // Limitation pour un affichage LCD de 16x2
+        // Limitez les longueurs des chaînes pour l'affichage LCD
         nom = nom.left(16);
         prenom = prenom.left(16);
 
         QString lcdMessage = QString("%1,%2\n").arg(nom).arg(prenom);
         qDebug() << "Message envoyé à Arduino : " << lcdMessage;
-        arduino->writeData(lcdMessage.toUtf8());//Envoie le message formaté à l'Arduino via le port série .
+
+        // Envoyez le message à l'Arduino
+        arduino->writeData(lcdMessage.toUtf8());
 
     } else {
+        // Aucun résultat trouvé
         QMessageBox::warning(this, "Fournisseur introuvable", "Aucun fournisseur trouvé pour cet RFID.");
         arduino->writeData("UNKNOWN\n");
     }
-}
+}*/
 
 
-void MainWindow::readSerialData() {
+/*void MainWindow::readSerialData() {
     QByteArray data = serialPort->readAll();
     QString rfid = QString(data).trimmed();
 
@@ -200,7 +213,7 @@ void MainWindow::readSerialData() {
             QMessageBox::warning(this, "Erreur", "Carte non reconnue.");
         }
     }
-}
+}*/
 
 
 void MainWindow::on_pushButton_statistique_clicked()

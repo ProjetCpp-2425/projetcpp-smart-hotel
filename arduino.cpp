@@ -4,6 +4,7 @@
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QDebug>
+#include <QSerialPortInfo>
 
 Arduino::Arduino(QObject *parent)
     : QObject(parent), serialPort(new QSerialPort(this)), connected(false)
@@ -18,8 +19,7 @@ Arduino::~Arduino()
     }
 }
 
-bool Arduino::openConnection(const QString &portName, int baudRate)
-{
+bool Arduino::openConnection(const QString &portName, int baudRate) {
     if (connected) {
         qDebug() << "Déjà connecté à un port série.";
         return true;
@@ -38,10 +38,10 @@ bool Arduino::openConnection(const QString &portName, int baudRate)
         return true;
     } else {
         qDebug() << "Échec de la connexion série sur" << portName;
+        qDebug() << "Erreur spécifique : " << serialPort->errorString();
         return false;
     }
 }
-
 void Arduino::closeConnection()
 {
     if (serialPort->isOpen()) {
