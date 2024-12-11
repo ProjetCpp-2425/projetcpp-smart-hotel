@@ -7,6 +7,7 @@
 #include <QMainWindow>
 #include <QMap>
 #include <QString>
+#include "arduino.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -50,7 +51,7 @@ private:
     Ui::MainWindow *ui;
     QVector<Client> clients;
     QMap<QString, int> historiqueClients; // Historique des visites (CIN -> nombre de visites)
-
+Arduino *arduino;
     int trouverClient(const QString &cin);
 };
 

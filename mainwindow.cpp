@@ -32,6 +32,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     afficherClients();
+    Arduino *arduino =new Arduino(this);
+    arduino->connectArduino();
+
     connect(ui->afficherStatistiquesButton, &QPushButton::clicked, this, &MainWindow::on_afficherStatistiquesButton_clicked);
 
     connect(ui->chercherButton, &QPushButton::clicked, this, &MainWindow::on_chercherButton_clicked);
@@ -40,6 +43,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->historiqueButton, &QPushButton::clicked, this, &MainWindow::afficherHistorique);
     connect(ui->modifierButton, &QPushButton::clicked, this, &MainWindow::on_modifierButton_clicked);
     connect(ui->chatbutton, &QPushButton::clicked, this, &MainWindow::on_chatbutton_clicked);
+
+
 
 }
 
@@ -1056,4 +1061,6 @@ void MainWindow::on_Obtenir_2_clicked()
 
     // Show the dialog
     qrDialog->exec();  // Show the dialog modally
+
+
 }
